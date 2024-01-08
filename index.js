@@ -1,8 +1,9 @@
 import express from 'express'
 import { config } from 'dotenv'
+import { connectDB } from './DB/connection.js'
 config()
 const app = express()
-
+connectDB()
 app.use(express.json())
 
 app.use('*', (req, res, next) => {
