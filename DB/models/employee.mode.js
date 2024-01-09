@@ -99,7 +99,7 @@ const Employee = sql_config.define(
       allowNull: false,
     },
     salary: {
-      type: DataTypes.FLOAT(),
+      type: DataTypes.FLOAT,
       allowNull: true,
     },
   },
