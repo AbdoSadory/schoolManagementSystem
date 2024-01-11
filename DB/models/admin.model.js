@@ -24,6 +24,11 @@ const Admin = sql_config.define(
       required: true,
       allowNull: false,
     },
+    role: {
+      type: DataTypes.STRING(255),
+      required: true,
+      defaultValue: 'admin',
+    },
   },
   { timestamps: true, paranoid: true }
 )
