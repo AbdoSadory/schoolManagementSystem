@@ -1,6 +1,5 @@
 import { DataTypes } from 'sequelize'
-import { sql_config } from '../connection'
-
+import { sql_config } from '../connection.js'
 const Student = sql_config.define(
   'tbl_student',
   {
