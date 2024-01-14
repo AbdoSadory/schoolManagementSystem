@@ -18,6 +18,7 @@ const Admin = sql_config.define(
       type: DataTypes.STRING(255),
       required: true,
       allowNull: false,
+      unique: true,
     },
     password: {
       type: DataTypes.STRING(255),

@@ -12,7 +12,7 @@ const TeachersCourses = sql_config.define(
       autoIncrement: true,
     },
     teacherId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       references: {
         model: Employee,
         key: 'id',

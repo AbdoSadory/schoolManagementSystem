@@ -10,8 +10,6 @@ import adminEmployee from './adminEmployee/adminEmployee.routes.js'
 import adminStudent from './adminStudent/adminStudent.routes.js'
 
 const adminRouter = Router()
-adminRouter.use('/employee', adminEmployee)
-adminRouter.use('/student', adminStudent)
 
 adminRouter.post(
   '/signIn',
@@ -24,5 +22,6 @@ adminRouter.post(
   dataValidationHandler(adminDataValidationSchemas.adminSignUpSchema),
   expressAsyncHandler(adminControllers.signUp)
 )
-
+adminRouter.use('/employee', adminEmployee)
+adminRouter.use('/student', adminStudent)
 export default adminRouter

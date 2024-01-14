@@ -5,9 +5,9 @@ const Employee = sql_config.define(
   'tbl_employee',
   {
     id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+      type: DataTypes.UUID,
       primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
     },
     name: {
       type: DataTypes.STRING(255),
@@ -18,6 +18,7 @@ const Employee = sql_config.define(
       type: DataTypes.STRING(255),
       required: true,
       allowNull: false,
+      unique: true,
     },
     password: {
       type: DataTypes.STRING(255),
@@ -28,6 +29,7 @@ const Employee = sql_config.define(
       type: DataTypes.STRING(255),
       required: true,
       allowNull: false,
+      unique: true,
     },
     nationality: {
       type: DataTypes.STRING(255),
@@ -38,6 +40,7 @@ const Employee = sql_config.define(
       type: DataTypes.STRING(255),
       required: true,
       allowNull: false,
+      unique: true,
     },
     age: {
       type: DataTypes.INTEGER,
@@ -57,7 +60,7 @@ const Employee = sql_config.define(
       allowNull: false,
     },
     graduationYear: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATEONLY, // string, "1990-01-01"
       required: true,
       allowNull: false,
     },
@@ -84,12 +87,11 @@ const Employee = sql_config.define(
         'art',
         'technology',
       ],
-      required: true,
-      allowNull: false,
+      allowNull: true,
     },
     employeeType: {
       type: DataTypes.ENUM,
-      values: ['Owner', 'CEO', 'teacher', 'director', 'hr', 'others'],
+      values: ['owner', 'ceo', 'teacher', 'director', 'hr', 'others'],
       required: true,
       allowNull: false,
     },
@@ -97,6 +99,8 @@ const Employee = sql_config.define(
       type: DataTypes.STRING(255),
       required: true,
       allowNull: false,
+      defaultValue:
+        'schoolManagementSystem/assets/imgs/defaultProfileImage.png',
     },
     salary: {
       type: DataTypes.FLOAT,

@@ -4,6 +4,6 @@ export const createAdmin = async () => {
   await Admin.create({
     name: 'admin1',
     email: 'admin1@admin1.com',
-    password: '123456',
+    password: '123456789',
   })
 }

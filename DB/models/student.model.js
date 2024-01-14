@@ -4,9 +4,9 @@ const Student = sql_config.define(
   'tbl_student',
   {
     id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+      type: DataTypes.UUID,
       primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
     },
     name: {
       type: DataTypes.STRING(255),
@@ -17,6 +17,7 @@ const Student = sql_config.define(
       type: DataTypes.STRING(255),
       required: true,
       allowNull: false,
+      unique: true,
     },
     password: {
       type: DataTypes.STRING(255),
@@ -27,11 +28,13 @@ const Student = sql_config.define(
       type: DataTypes.STRING(255),
       required: true,
       allowNull: false,
+      unique: true,
     },
     parentPhoneNumber: {
       type: DataTypes.STRING(255),
       required: true,
       allowNull: false,
+      unique: true,
     },
     totalFees: {
       type: DataTypes.FLOAT,
@@ -75,6 +78,8 @@ const Student = sql_config.define(
       type: DataTypes.STRING(255),
       required: true,
       allowNull: false,
+      defaultValue:
+        'schoolManagementSystem/assets/imgs/defaultProfileImage.png',
     },
   },
   { timestamps: true, paranoid: true }
