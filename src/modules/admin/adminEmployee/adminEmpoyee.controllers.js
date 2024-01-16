@@ -1,5 +1,6 @@
 import bcryptjs from 'bcryptjs'
 import Employee from '../../../../DB/models/employee.mode.js'
+import cloudinaryConnection from '../../../utils/mediaHostConnection.js'
 
 export const getAllEmployees = async (req, res, next) => {
   const { name, email } = req.query
@@ -16,13 +17,22 @@ export const getAllEmployees = async (req, res, next) => {
     employees,
   })
 }
-export const getEmployee = async (req, res, next) => {
-  const { employeeId } = req.params
-  console.log(employeeId)
-}
+
 export const getEmployeeByEmail = async (req, res, next) => {
-  const { email } = req.body
-  console.log(email)
+  const { employeeEmail } = req.body
+  const employee = await Employee.findOne({
+    where: {
+      email: employeeEmail,
+    },
+  })
+  if (!employee) {
+    return next(
+      new Error('This Employee is not existed', {
+        cause: 404,
+      })
+    )
+  }
+  res.status(200).json({ message: 'Employee', employee })
 }
 export const createEmployee = async (req, res, next) => {
   const {
@@ -38,7 +48,9 @@ export const createEmployee = async (req, res, next) => {
     graduationYear,
     educationDegree,
     employeePosition,
+    specialization,
     employeeType,
+    salary,
   } = req.body
 
   const isEmailExisted = await Employee.findOne({ where: { email } })
@@ -60,8 +72,9 @@ export const createEmployee = async (req, res, next) => {
     educationDegree,
     employeePosition,
     employeeType,
+    specialization,
+    salary,
   })
-
   if (!newEmployee) {
     return next(new Error('Error While Creating Employee'))
   }
@@ -90,7 +103,9 @@ export const updateEmployee = async (req, res, next) => {
     graduationYear,
     educationDegree,
     employeePosition,
+    specialization,
     employeeType,
+    salary,
   } = req.body
 
   if (!employeeEmail) {
@@ -149,34 +164,51 @@ export const updateEmployee = async (req, res, next) => {
       )
     }
   }
+
+  let uploadedProfileImage
+  if (req.file) {
+    uploadedProfileImage = await cloudinaryConnection().uploader.upload(
+      req.file.path,
+      {
+        folder: `schoolManagementSystem/assets/imgs/employee/${isEmployeeExisted.employeeType}/${isEmployeeExisted.id}`,
+        public_id: 'profileImage',
+      }
+    )
+
+    isEmployeeExisted.profileImagePath = uploadedProfileImage.secure_url
+    isEmployeeExisted.profileImagePublic_Id = uploadedProfileImage.public_id
+  }
   let hashedPassword
   if (password) {
     hashedPassword = bcryptjs.hashSync(password, parseInt(process.env.SALT))
   }
-  const updatedEmployee = await Employee.update(
-    {
-      name,
-      email,
-      password: hashedPassword,
-      nationalID,
-      nationality,
-      phoneNumber,
-      age,
-      gender,
-      maritalStatus,
-      graduationYear,
-      educationDegree,
-      employeePosition,
-      employeeType,
-    },
-    { where: { email: employeeEmail } }
-  )
-  if (!updatedEmployee) {
-    return next(new Error('Error While updating Employee'))
-  }
 
+  name && (isEmployeeExisted.name = name)
+  email && (isEmployeeExisted.email = email)
+  password && (isEmployeeExisted.password = password)
+  nationalID && (isEmployeeExisted.nationalID = nationalID)
+  nationality && (isEmployeeExisted.nationality = nationality)
+  phoneNumber && (isEmployeeExisted.phoneNumber = phoneNumber)
+  age && (isEmployeeExisted.age = age)
+  gender && (isEmployeeExisted.gender = gender)
+  maritalStatus && (isEmployeeExisted.maritalStatus = maritalStatus)
+  graduationYear && (isEmployeeExisted.graduationYear = graduationYear)
+  educationDegree && (isEmployeeExisted.educationDegree = educationDegree)
+  employeePosition && (isEmployeeExisted.employeePosition = employeePosition)
+  specialization && (isEmployeeExisted.specialization = specialization)
+  employeeType && (isEmployeeExisted.employeeType = employeeType)
+  salary && (isEmployeeExisted.salary = salary)
+
+  const updatedEmployee = await isEmployeeExisted.save()
+  if (!updatedEmployee) {
+    await cloudinaryConnection().uploader.destroy(
+      uploadedProfileImage.public_id
+    )
+    return next(new Error('Error while updating The Employee'))
+  }
   res.status(200).json({ message: 'Updated Employee', updatedEmployee })
 }
+
 export const deleteEmployee = async (req, res, next) => {
   const { employeeEmail } = req.body
   const isEmployeeExisted = await Employee.findOne({
@@ -191,13 +223,13 @@ export const deleteEmployee = async (req, res, next) => {
       })
     )
   }
-  const deletedEmployee = await Employee.destroy({
-    where: { email: employeeEmail },
-    force: true,
-  })
-  console.log(deletedEmployee)
+  const deletedEmployee = await isEmployeeExisted.destroy({ force: true })
+
   if (!deletedEmployee) {
     return next(new Error('Error While deleting Employee'))
   }
+  // await cloudinaryConnection().uploader.destroy(
+  //   isEmployeeExisted.profileImagePublic_Id
+  // )
   res.status(200).json({ message: 'Deleted Employee', deletedEmployee })
 }

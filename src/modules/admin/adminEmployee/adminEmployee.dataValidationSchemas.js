@@ -78,7 +78,7 @@ export const adminEmployeeUpdateEmployee = {
     employeeType: Joi.string()
       .trim()
       .valid('owner', 'ceo', 'teacher', 'director', 'hr', 'others'),
-    profileImagePath: Joi.string(),
+    profileImage: Joi.string(),
     salary: Joi.number(),
   }),
 }

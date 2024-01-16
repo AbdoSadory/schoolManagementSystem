@@ -3,6 +3,7 @@ import { config } from 'dotenv'
 import { connectDB } from './DB/connection.js'
 import adminRouter from './src/modules/admin/admin.routes.js'
 import globalErrorHandler from './src/middlewares/globalErrorHandler.js'
+import cloudinaryConnection from './src/utils/mediaHostConnection.js'
 import allAssociations from './DB/models/associations/associations.js'
 import { createAdmin } from './src/utils/createAdmin.js'
 
@@ -13,6 +14,7 @@ const app = express()
 // .then((res) => createAdmin())
 // .then((res) => console.log('🟢 Admin has been created'))
 // .catch((err) => console.log(err.message))
+cloudinaryConnection()
 
 app.use(express.json())
 

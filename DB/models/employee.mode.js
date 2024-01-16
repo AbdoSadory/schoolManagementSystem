@@ -100,7 +100,14 @@ const Employee = sql_config.define(
       required: true,
       allowNull: false,
       defaultValue:
-        'schoolManagementSystem/assets/imgs/defaultProfileImage.png',
+        'https://res.cloudinary.com/dsjy29z66/image/upload/v1705178632/schoolManagementSystem/assets/imgs/defaultProfileImage_n7ycr5.png',
+    },
+    profileImagePublic_Id: {
+      type: DataTypes.STRING(255),
+      required: true,
+      allowNull: false,
+      defaultValue:
+        'schoolManagementSystem/assets/imgs/defaultProfileImage_n7ycr5',
     },
     salary: {
       type: DataTypes.FLOAT,
