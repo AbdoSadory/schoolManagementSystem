@@ -1,5 +1,6 @@
 import bcryptjs from 'bcryptjs'
 import Student from '../../../../DB/models/student.model.js'
+import cloudinaryConnection from '../../../utils/mediaHostConnection.js'
 
 export const getAllStudents = async (req, res, next) => {
   const { name, email } = req.query
@@ -16,7 +17,6 @@ export const getAllStudents = async (req, res, next) => {
     students,
   })
 }
-
 export const getStudentByEmail = async (req, res, next) => {
   const { studentEmail } = req.body
   const student = await Student.findOne({
@@ -38,91 +38,86 @@ export const createStudent = async (req, res, next) => {
     name,
     email,
     password,
-    nationalID,
-    nationality,
     phoneNumber,
+    parentPhoneNumber,
+    totalFees,
+    paidFees,
+    feesStatus,
+    nationality,
     age,
     gender,
-    maritalStatus,
-    graduationYear,
-    educationDegree,
-    employeePosition,
-    employeeType,
+    grade,
   } = req.body
 
-  const isEmailExisted = await Employee.findOne({ where: { email } })
-  if (isEmailExisted) {
+  const isStudentExisted = await Student.findOne({ where: { email } })
+  if (isStudentExisted) {
     return next(new Error('This Email is already existed', { cause: 400 }))
   }
   const hashedPassword = bcryptjs.hashSync(password, parseInt(process.env.SALT))
-  const newEmployee = await Employee.create({
+  const newStudent = await Student.create({
     name,
     email,
     password: hashedPassword,
-    nationalID,
-    nationality,
     phoneNumber,
+    parentPhoneNumber,
+    totalFees,
+    paidFees,
+    feesStatus,
+    nationality,
     age,
     gender,
-    maritalStatus,
-    graduationYear,
-    educationDegree,
-    employeePosition,
-    employeeType,
+    grade,
   })
-
-  if (!newEmployee) {
-    return next(new Error('Error While Creating Employee'))
+  if (!newStudent) {
+    return next(new Error('Error While Creating Student'))
   }
-  res.json({ message: 'New Employee', newEmployee })
+  res.json({ message: 'New Student', newStudent })
 }
-export const updateEmployee = async (req, res, next) => {
+export const updateStudent = async (req, res, next) => {
   /*
-  1- check the employee if existed
+  1- check the student if existed
   2- check new email if existed
-  3- check nationaID 
   3- check phone number
   4- hash password
   5- update
   */
   const {
-    employeeEmail,
+    studentEmail,
     name,
     email,
     password,
-    nationalID,
-    nationality,
     phoneNumber,
+    parentPhoneNumber,
+    totalFees,
+    paidFees,
+    feesStatus,
+    nationality,
     age,
     gender,
-    maritalStatus,
-    graduationYear,
-    educationDegree,
-    employeePosition,
-    employeeType,
+    grade,
   } = req.body
 
-  if (!employeeEmail) {
+  if (!studentEmail) {
     return next(
-      new Error('You should send the employee that you want to update him', {
+      new Error('You should send the student that you want to update him', {
         cause: 400,
       })
     )
   }
-  const isEmployeeExisted = await Employee.findOne({
-    where: { email: employeeEmail },
+  const isStudentExisted = await Student.findOne({
+    where: { email: studentEmail },
   })
-  if (!isEmployeeExisted) {
+  if (!isStudentExisted) {
     return next(
-      new Error('This Employee is not existed', {
+      new Error('This student is not existed', {
         cause: 404,
       })
     )
   }
 
   if (email) {
-    const isEmailExisted = await Employee.findOne({ where: { email } })
-    if (isEmailExisted && isEmailExisted.email !== isEmployeeExisted.email) {
+    const isEmailExisted = await Student.findOne({ where: { email } })
+    if (isEmailExisted && isEmailExisted.email !== isStudentExisted.email) {
       return next(
         new Error('This Email is already existed, try another one', {
           cause: 400,
@@ -130,26 +125,14 @@ export const updateEmployee = async (req, res, next) => {
       )
     }
   }
-  if (nationalID) {
-    const isNationalExisted = await Employee.findOne({ where: { nationalID } })
-    if (
-      isNationalExisted &&
-      isNationalExisted.nationalID !== isEmployeeExisted.nationalID
-    ) {
-      return next(
-        new Error('This National ID is already existed, try another one', {
-          cause: 400,
-        })
-      )
-    }
-  }
+
   if (phoneNumber) {
-    const isPhoneNumberExisted = await Employee.findOne({
+    const isPhoneNumberExisted = await Student.findOne({
       where: { phoneNumber },
     })
     if (
       isPhoneNumberExisted &&
-      isPhoneNumberExisted.phoneNumber !== isEmployeeExisted.phoneNumber
+      isPhoneNumberExisted.phoneNumber !== isStudentExisted.phoneNumber
     ) {
       return next(
         new Error('This Phone Number is already existed, try another one', {
@@ -158,55 +141,77 @@ export const updateEmployee = async (req, res, next) => {
       )
     }
   }
+
+  let uploadedProfileImage
+  if (req.file) {
+    uploadedProfileImage = await cloudinaryConnection().uploader.upload(
+      req.file.path,
+      {
+        folder: `schoolManagementSystem/assets/students/grade-${isStudentExisted.grade}/${isStudentExisted.id}/imgs`,
+        public_id: 'profileImage',
+      }
+    )
+
+    isStudentExisted.profileImagePath = uploadedProfileImage.secure_url
+    isStudentExisted.profileImagePublic_Id = uploadedProfileImage.public_id
+  }
   let hashedPassword
   if (password) {
     hashedPassword = bcryptjs.hashSync(password, parseInt(process.env.SALT))
   }
-  const updatedEmployee = await Employee.update(
-    {
-      name,
-      email,
-      password: hashedPassword,
-      nationalID,
-      nationality,
-      phoneNumber,
-      age,
-      gender,
-      maritalStatus,
-      graduationYear,
-      educationDegree,
-      employeePosition,
-      employeeType,
-    },
-    { where: { email: employeeEmail } }
-  )
-  if (!updatedEmployee) {
-    return next(new Error('Error While updating Employee'))
-  }
 
-  res.status(200).json({ message: 'Updated Employee', updatedEmployee })
+  name && (isStudentExisted.name = name)
+  email && (isStudentExisted.email = email)
+  password && (isStudentExisted.password = hashedPassword)
+  nationality && (isStudentExisted.nationality = nationality)
+  phoneNumber && (isStudentExisted.phoneNumber = phoneNumber)
+  parentPhoneNumber && (isStudentExisted.parentPhoneNumber = parentPhoneNumber)
+  age && (isStudentExisted.age = age)
+  gender && (isStudentExisted.gender = gender)
+  totalFees && (isStudentExisted.totalFees = totalFees)
+  paidFees && (isStudentExisted.paidFees = paidFees)
+  feesStatus && (isStudentExisted.feesStatus = feesStatus)
+  grade && (isStudentExisted.grade = grade)
+
+  const updatedStudent = await isStudentExisted.save()
+  if (!updatedStudent) {
+    await cloudinaryConnection().uploader.destroy(
+      uploadedProfileImage.public_id
+    )
+    return next(new Error('Error while updating The student'))
+  }
+  res.status(200).json({ message: 'Updated Student', updatedStudent })
 }
-export const deleteEmployee = async (req, res, next) => {
-  const { employeeEmail } = req.body
-  const isEmployeeExisted = await Employee.findOne({
+export const deleteStudent = async (req, res, next) => {
+  const { studentEmail } = req.body
+  const isStudentExisted = await Student.findOne({
     where: {
-      email: employeeEmail,
+      email: studentEmail,
     },
   })
-  if (!isEmployeeExisted) {
+  if (!isStudentExisted) {
     return next(
-      new Error('This Employee is not existed', {
+      new Error('This Student is not existed', {
         cause: 404,
       })
     )
   }
-  const deletedEmployee = await Employee.destroy({
-    where: { email: employeeEmail },
+  const deletedStudent = await Student.destroy({
+    where: { email: studentEmail },
     force: true,
   })
-  console.log(deletedEmployee)
-  if (!deletedEmployee) {
-    return next(new Error('Error While deleting Employee'))
+  if (!deletedStudent) {
+    return next(new Error('Error While deleting Student'))
   }
-  res.status(200).json({ message: 'Deleted Employee', deletedEmployee })
+  await cloudinaryConnection()
+    .api.delete_resources_by_prefix(
+      `schoolManagementSystem/assets/students/grade-${isStudentExisted.grade}/${isStudentExisted.id}`
+    )
+    .then((result) =>
+      cloudinaryConnection().api.delete_folder(
+        `schoolManagementSystem/assets/students/grade-${isStudentExisted.grade}/${isStudentExisted.id}`
+      )
+    )
+    .catch((err) => next(new Error('Error While Deleting Media folders')))
+  res.status(204).json({ message: 'Deleted Student', deletedStudent })
 }

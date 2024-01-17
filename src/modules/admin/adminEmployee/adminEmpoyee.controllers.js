@@ -170,7 +170,7 @@ export const updateEmployee = async (req, res, next) => {
     uploadedProfileImage = await cloudinaryConnection().uploader.upload(
       req.file.path,
       {
-        folder: `schoolManagementSystem/assets/imgs/employee/${isEmployeeExisted.employeeType}/${isEmployeeExisted.id}`,
+        folder: `schoolManagementSystem/assets/employee/${isEmployeeExisted.employeeType}/${isEmployeeExisted.id}/imgs`,
         public_id: 'profileImage',
       }
     )
@@ -185,7 +185,7 @@ export const updateEmployee = async (req, res, next) => {
 
   name && (isEmployeeExisted.name = name)
   email && (isEmployeeExisted.email = email)
-  password && (isEmployeeExisted.password = password)
+  password && (isEmployeeExisted.password = hashedPassword)
   nationalID && (isEmployeeExisted.nationalID = nationalID)
   nationality && (isEmployeeExisted.nationality = nationality)
   phoneNumber && (isEmployeeExisted.phoneNumber = phoneNumber)
@@ -228,8 +228,15 @@ export const deleteEmployee = async (req, res, next) => {
   if (!deletedEmployee) {
     return next(new Error('Error While deleting Employee'))
   }
-  // await cloudinaryConnection().uploader.destroy(
-  //   isEmployeeExisted.profileImagePublic_Id
-  // )
-  res.status(200).json({ message: 'Deleted Employee', deletedEmployee })
+  await cloudinaryConnection()
+    .api.delete_resources_by_prefix(
+      `schoolManagementSystem/assets/employee/teacher/${isEmployeeExisted.id}`
+    )
+    .then((result) =>
+      cloudinaryConnection().api.delete_folder(
+        `schoolManagementSystem/assets/employee/teacher/${isEmployeeExisted.id}`
+      )
+    )
+    .catch((err) => next(new Error('Error While Deleting Media folders')))
+  res.status(204).json({ message: 'Deleted Employee' })
 }
