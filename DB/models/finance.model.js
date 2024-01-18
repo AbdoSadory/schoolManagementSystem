@@ -33,7 +33,47 @@ const Finance = sql_config.define(
       required: true,
       allowNull: false,
     },
-    fees: {
+    feesGrade1: {
+      type: DataTypes.DOUBLE,
+      required: true,
+      allowNull: false,
+    },
+    feesGrade2: {
+      type: DataTypes.DOUBLE,
+      required: true,
+      allowNull: false,
+    },
+    feesGrade3: {
+      type: DataTypes.DOUBLE,
+      required: true,
+      allowNull: false,
+    },
+    feesGrade4: {
+      type: DataTypes.DOUBLE,
+      required: true,
+      allowNull: false,
+    },
+    feesGrade5: {
+      type: DataTypes.DOUBLE,
+      required: true,
+      allowNull: false,
+    },
+    feesGrade6: {
+      type: DataTypes.DOUBLE,
+      required: true,
+      allowNull: false,
+    },
+    feesGrade7: {
+      type: DataTypes.DOUBLE,
+      required: true,
+      allowNull: false,
+    },
+    feesGrade8: {
+      type: DataTypes.DOUBLE,
+      required: true,
+      allowNull: false,
+    },
+    feesGrade9: {
       type: DataTypes.DOUBLE,
       required: true,
       allowNull: false,

@@ -7,7 +7,9 @@ export const getAllEmployees = async (req, res, next) => {
   let employees
   if (name || email) {
     employees = await Employee.findAll({
-      where: { name: name ? name : '', email: email ? email : '' },
+      where: {
+        [Op.and]: [name && { name: name }, email && { email: email }],
+      },
     })
   } else {
     employees = await Employee.findAll()

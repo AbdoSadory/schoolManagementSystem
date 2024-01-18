@@ -7,7 +7,7 @@ export const getAllStudents = async (req, res, next) => {
   let students
   if (name || email) {
     students = await Student.findAll({
-      where: { name: name ? name : '', email: email ? email : '' },
+      where: { [Op.and]: [name && { name: name }, email && { email: email }] },
     })
   } else {
     students = await Student.findAll()

@@ -8,6 +8,7 @@ import Admin from '../../../DB/models/admin.model.js'
 import authorizationHandler from '../../middlewares/authorizationHandler.js'
 import adminEmployee from './adminEmployee/adminEmployee.routes.js'
 import adminStudent from './adminStudent/adminStudent.routes.js'
+import adminCourse from './adminCourse/adminCourse.routes.js'
 
 const adminRouter = Router()
 
@@ -24,4 +25,5 @@ adminRouter.post(
 )
 adminRouter.use('/employee', adminEmployee)
 adminRouter.use('/student', adminStudent)
+adminRouter.use('/course', adminCourse)
 export default adminRouter

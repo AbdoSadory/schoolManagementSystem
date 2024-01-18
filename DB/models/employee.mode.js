@@ -86,6 +86,7 @@ const Employee = sql_config.define(
         'sports',
         'art',
         'technology',
+        'music',
       ],
       allowNull: true,
     },
