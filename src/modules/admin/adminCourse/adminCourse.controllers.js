@@ -1,5 +1,3 @@
-import bcryptjs from 'bcryptjs'
-import cloudinaryConnection from '../../../utils/mediaHostConnection.js'
 import Course from '../../../../DB/models/course.model.js'
 import { Op } from 'sequelize'
 
@@ -25,7 +23,6 @@ export const getAllCourses = async (req, res, next) => {
     courses: courses.length ? courses : 'No Courses',
   })
 }
-
 export const createCourse = async (req, res, next) => {
   const { title, description, specialization, learningMode, grade } = req.body
 

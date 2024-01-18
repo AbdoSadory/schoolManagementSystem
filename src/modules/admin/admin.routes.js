@@ -9,6 +9,7 @@ import authorizationHandler from '../../middlewares/authorizationHandler.js'
 import adminEmployee from './adminEmployee/adminEmployee.routes.js'
 import adminStudent from './adminStudent/adminStudent.routes.js'
 import adminCourse from './adminCourse/adminCourse.routes.js'
+import adminFinance from './adminFinance/adminFinance.routes.js'
 
 const adminRouter = Router()
 
@@ -26,4 +27,5 @@ adminRouter.post(
 adminRouter.use('/employee', adminEmployee)
 adminRouter.use('/student', adminStudent)
 adminRouter.use('/course', adminCourse)
+adminRouter.use('/finance', adminFinance)
 export default adminRouter

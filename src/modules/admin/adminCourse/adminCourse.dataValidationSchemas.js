@@ -8,13 +8,14 @@ export const adminCourseCreateCourse = {
         'english',
         'french',
         'history',
-        'mathmatics',
+        'mathematics',
         'statistics',
         'physics',
         'chemistry',
         'biology',
         'zoology',
         'computer science',
+        'sport',
         'art',
         'music'
       )
@@ -29,10 +30,33 @@ export const adminCourseCreateCourse = {
         'mathematics',
         'sports',
         'art',
-        'technology',
         'music'
       )
-      .required(),
+      .required()
+      .when('title', [
+        {
+          is: Joi.string().valid('english', 'french'),
+          then: 'languages',
+        },
+        { is: Joi.string().valid('history'), then: 'history' },
+        {
+          is: Joi.string().valid(
+            'physics',
+            'chemistry',
+            'biology',
+            'zoology',
+            'computer science'
+          ),
+          then: 'science',
+        },
+        {
+          is: Joi.string().valid('mathematics', 'statistics'),
+          then: 'mathematics',
+        },
+        { is: Joi.string().valid('sport'), then: 'sports' },
+        { is: Joi.string().valid('art'), then: 'art' },
+        { is: Joi.string().valid('music'), then: 'music' },
+      ]),
     grade: Joi.string()
       .trim()
       .valid('1', '2', '3', '4', '5', '6', '7', '8', '9')
@@ -55,13 +79,14 @@ export const adminCourseUpdateCourse = {
         'english',
         'french',
         'history',
-        'mathmatics',
+        'mathematics',
         'statistics',
         'physics',
         'chemistry',
         'biology',
         'zoology',
         'computer science',
+        'sport',
         'art',
         'music'
       ),
@@ -75,11 +100,37 @@ export const adminCourseUpdateCourse = {
         'mathematics',
         'sports',
         'art',
-        'technology',
         'music'
-      ),
+      )
+      .when('title', [
+        {
+          is: Joi.string().valid('english', 'french'),
+          then: 'languages',
+        },
+        { is: Joi.string().valid('history'), then: 'history' },
+        {
+          is: Joi.string().valid(
+            'physics',
+            'chemistry',
+            'biology',
+            'zoology',
+            'computer science'
+          ),
+          then: 'science',
+        },
+        {
+          is: Joi.string().valid('mathematics', 'statistics'),
+          then: 'mathematics',
+        },
+        { is: Joi.string().valid('sport'), then: 'sports' },
+        { is: Joi.string().valid('art'), then: 'art' },
+        {
+          is: Joi.string().valid('music'),
+          then: 'music',
+        },
+      ]),
     grade: Joi.string()
       .trim()
       .valid('1', '2', '3', '4', '5', '6', '7', '8', '9'),
-  }),
+  }).with('title', 'specialization'),
 }
