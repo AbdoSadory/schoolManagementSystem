@@ -7,6 +7,9 @@ const adminClassroom = Router({ mergeParams: true })
 
 adminClassroom.get(
   '/',
+  dataValidationHandler(
+    dataValidationSchemas.adminClassroomGetAllClassroomsSchema
+  ),
   expressAsyncHandler(adminClassroomControllers.getAllClassrooms)
 )
 

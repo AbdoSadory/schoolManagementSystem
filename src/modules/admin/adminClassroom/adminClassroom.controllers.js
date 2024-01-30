@@ -2,7 +2,16 @@ import ClassRoom from '../../../../DB/models/classRoom.model.js'
 import Course from '../../../../DB/models/course.model.js'
 
 export const getAllClassrooms = async (req, res, next) => {
-  const classrooms = await ClassRoom.findAll({ include: Course })
+  const { term, year, grade, learningMode } = req.query
+  let query = {}
+  if (term) query.term = term
+  if (grade) query.grade = grade
+  if (year) query.year = year
+  if (learningMode) query.learningMode = learningMode
+  const classrooms = await ClassRoom.findAll(
+    { where: query },
+    { include: Course }
+  )
   if (!classrooms) return next(new Error('Error while getting classrooms'))
 
   res.status(200).json({ message: 'Classrooms', classrooms })
