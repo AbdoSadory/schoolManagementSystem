@@ -10,7 +10,7 @@ import { createAdmin } from './src/utils/createAdmin.js'
 config()
 const app = express()
 
-// connectDB().then((res) => allAssociations())
+connectDB().then((res) => allAssociations())
 // .then((res) => createAdmin())
 // .then((res) => console.log('🟢 Admin has been created'))
 // .catch((err) => console.log(err.message))

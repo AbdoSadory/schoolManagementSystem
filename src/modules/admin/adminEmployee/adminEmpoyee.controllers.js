@@ -232,11 +232,11 @@ export const deleteEmployee = async (req, res, next) => {
   }
   await cloudinaryConnection()
     .api.delete_resources_by_prefix(
-      `schoolManagementSystem/assets/employee/teacher/${isEmployeeExisted.id}`
+      `schoolManagementSystem/assets/employee/${isEmployeeExisted.employeeType}/${isEmployeeExisted.id}`
     )
     .then((result) =>
       cloudinaryConnection().api.delete_folder(
-        `schoolManagementSystem/assets/employee/teacher/${isEmployeeExisted.id}`
+        `schoolManagementSystem/assets/employee/${isEmployeeExisted.employeeType}/${isEmployeeExisted.id}`
       )
     )
     .catch((err) => next(new Error('Error While Deleting Media folders')))

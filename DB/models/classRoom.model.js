@@ -22,7 +22,7 @@ const ClassRoom = sql_config.define(
       allowNull: false,
     },
     year: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.STRING,
       required: true,
       allowNull: false,
     },
