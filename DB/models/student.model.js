@@ -34,7 +34,6 @@ const Student = sql_config.define(
       type: DataTypes.STRING(255),
       required: true,
       allowNull: false,
-      unique: true,
     },
     totalFees: {
       type: DataTypes.FLOAT,

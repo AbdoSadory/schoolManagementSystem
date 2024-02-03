@@ -9,7 +9,7 @@ const CourseResults = sql_config.define(
       primaryKey: true,
     },
     year: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.STRING,
       required: true,
       allowNull: false,
     },

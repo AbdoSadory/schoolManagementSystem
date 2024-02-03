@@ -1,6 +1,7 @@
 import bcryptjs from 'bcryptjs'
 import Student from '../../../../DB/models/student.model.js'
 import cloudinaryConnection from '../../../utils/mediaHostConnection.js'
+import { Op } from 'sequelize'
 
 export const getAllStudents = async (req, res, next) => {
   const { name, email } = req.query
@@ -54,6 +55,33 @@ export const createStudent = async (req, res, next) => {
     return next(new Error('This Email is already existed', { cause: 400 }))
   }
   const hashedPassword = bcryptjs.hashSync(password, parseInt(process.env.SALT))
+  const isPhoneNumberExistedForAnotherStudent = await Student.findOne({
+    where: { phoneNumber },
+  })
+  if (isPhoneNumberExistedForAnotherStudent) {
+    return next(
+      new Error(
+        'This Phone Number is already existed for another student, try another one',
+        {
+          cause: 400,
+        }
+      )
+    )
+  }
+  const isPhoneNumberExistedForParentPhone = await Student.findOne({
+    where: { parentPhoneNumber: phoneNumber },
+  })
+  if (isPhoneNumberExistedForParentPhone) {
+    return next(
+      new Error(
+        'This Phone Number is already existed for parent phone number, try another one',
+        {
+          cause: 400,
+        }
+      )
+    )
+  }
+
   const newStudent = await Student.create({
     name,
     email,
@@ -127,21 +155,52 @@ export const updateStudent = async (req, res, next) => {
   }
 
   if (phoneNumber) {
-    const isPhoneNumberExisted = await Student.findOne({
+    const isPhoneNumberExistedForAnotherStudent = await Student.findOne({
       where: { phoneNumber },
     })
     if (
-      isPhoneNumberExisted &&
-      isPhoneNumberExisted.phoneNumber !== isStudentExisted.phoneNumber
+      isPhoneNumberExistedForAnotherStudent &&
+      isPhoneNumberExistedForAnotherStudent.id !== isStudentExisted.id
     ) {
       return next(
-        new Error('This Phone Number is already existed, try another one', {
-          cause: 400,
-        })
+        new Error(
+          'This Phone Number is already existed for another student, try another one',
+          {
+            cause: 400,
+          }
+        )
+      )
+    }
+    const isPhoneNumberExistedForParentPhone = await Student.findOne({
+      where: { parentPhoneNumber: phoneNumber },
+    })
+    if (isPhoneNumberExistedForParentPhone) {
+      return next(
+        new Error(
+          'This Phone Number is already existed for parent phone number, try another one',
+          {
+            cause: 400,
+          }
+        )
       )
     }
   }
 
+  if (parentPhoneNumber) {
+    const isPhoneNumberExistedForStudent = await Student.findOne({
+      where: { phoneNumber: parentPhoneNumber },
+    })
+    if (isPhoneNumberExistedForStudent) {
+      return next(
+        new Error(
+          'This Phone Number is already existed for student phone number, try another one',
+          {
+            cause: 400,
+          }
+        )
+      )
+    }
+  }
   let uploadedProfileImage
   if (req.file) {
     uploadedProfileImage = await cloudinaryConnection().uploader.upload(
