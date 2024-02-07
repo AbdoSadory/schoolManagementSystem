@@ -1,5 +1,11 @@
 import { DataTypes } from 'sequelize'
 import { sql_config } from '../connection.js'
+import {
+  courseSpecializationEnum,
+  courseTitleEnum,
+  gradeEnum,
+  learningModeEnum,
+} from '../../src/utils/generalConstants.js'
 const Course = sql_config.define(
   'tbl_course',
   {
@@ -11,20 +17,7 @@ const Course = sql_config.define(
     title: {
       type: DataTypes.ENUM,
       required: true,
-      values: [
-        'english',
-        'french',
-        'history',
-        'mathmatics',
-        'statistics',
-        'physics',
-        'chemistry',
-        'biology',
-        'zoology',
-        'computer science',
-        'art',
-        'music',
-      ],
+      values: courseTitleEnum,
       allowNull: false,
     },
     description: {
@@ -35,27 +28,18 @@ const Course = sql_config.define(
     specialization: {
       type: DataTypes.ENUM,
       required: true,
-      values: [
-        'languages',
-        'history',
-        'science',
-        'mathematics',
-        'sports',
-        'art',
-        'technology',
-        'music',
-      ],
+      values: courseSpecializationEnum,
       allowNull: false,
     },
     grade: {
       type: DataTypes.ENUM,
-      values: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+      values: gradeEnum,
       required: true,
       allowNull: false,
     },
     learningMode: {
       type: DataTypes.ENUM,
-      values: ['offline', 'online', 'hybrid'],
+      values: learningModeEnum,
       required: true,
       allowNull: false,
     },

@@ -1,4 +1,12 @@
 import Joi from 'joi'
+import {
+  courseSpecializationEnum,
+  educationDegreeEnum,
+  employeePositionEnum,
+  employeeTypeEnum,
+  genderEnum,
+  maritalStatusEnum,
+} from '../../../utils/generalConstants.js'
 
 export const adminEmployeeCreateEmployee = {
   body: Joi.object({
@@ -9,35 +17,29 @@ export const adminEmployeeCreateEmployee = {
     nationality: Joi.string().trim().required(),
     phoneNumber: Joi.string().trim().min(7).max(15).required(),
     age: Joi.number().required(),
-    gender: Joi.string().trim().valid('male', 'female').required(),
+    gender: Joi.string()
+      .trim()
+      .valid(...genderEnum)
+      .required(),
     maritalStatus: Joi.string()
       .trim()
-      .valid('married', 'widowed', 'separated', 'divorced', 'single')
+      .valid(...maritalStatusEnum)
       .required(),
     graduationYear: Joi.date().less('now'),
     educationDegree: Joi.string()
       .trim()
-      .valid('associate', 'bachelor', 'master', 'doctorate')
+      .valid(...educationDegreeEnum)
       .required(),
     employeePosition: Joi.string()
       .trim()
-      .valid('junior', 'mid-level', 'senior', 'team-leader', 'manager')
+      .valid(...employeePositionEnum)
       .required(),
     specialization: Joi.string()
       .trim()
-      .valid(
-        'languages',
-        'history',
-        'science',
-        'mathematics',
-        'sports',
-        'art',
-        'technology'
-      )
-      .required(),
+      .valid(...courseSpecializationEnum),
     employeeType: Joi.string()
       .trim()
-      .valid('owner', 'ceo', 'teacher', 'director', 'hr', 'others')
+      .valid(...employeeTypeEnum)
       .required(),
     salary: Joi.number(),
   }).with('email', 'password'),
@@ -53,31 +55,25 @@ export const adminEmployeeUpdateEmployee = {
     nationality: Joi.string().trim(),
     phoneNumber: Joi.string().trim().min(7).max(15),
     age: Joi.number(),
-    gender: Joi.string().trim().valid('male', 'female'),
+    gender: Joi.string()
+      .trim()
+      .valid(...genderEnum),
     maritalStatus: Joi.string()
       .trim()
-      .valid('married', 'widowed', 'separated', 'divorced', 'single'),
+      .valid(...maritalStatusEnum),
     graduationYear: Joi.date().less('now'),
     educationDegree: Joi.string()
       .trim()
-      .valid('associate', 'bachelor', 'master', 'doctorate'),
+      .valid(...educationDegreeEnum),
     employeePosition: Joi.string()
       .trim()
-      .valid('junior', 'mid-level', 'senior', 'team-leader', 'manager'),
+      .valid(...employeePositionEnum),
     specialization: Joi.string()
       .trim()
-      .valid(
-        'languages',
-        'history',
-        'science',
-        'mathematics',
-        'sports',
-        'art',
-        'technology'
-      ),
+      .valid(...courseSpecializationEnum),
     employeeType: Joi.string()
       .trim()
-      .valid('owner', 'ceo', 'teacher', 'director', 'hr', 'others'),
+      .valid(...employeeTypeEnum),
     profileImage: Joi.string(),
     salary: Joi.number(),
   }),

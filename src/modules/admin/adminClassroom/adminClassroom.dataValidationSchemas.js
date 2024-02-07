@@ -1,32 +1,43 @@
 import Joi from 'joi'
 import JoiDate from '@joi/date'
+import {
+  gradeEnum,
+  learningModeEnum,
+  termEnum,
+} from '../../../utils/generalConstants.js'
 
 const joi = Joi.extend(JoiDate)
 export const adminClassroomGetAllClassroomsSchema = {
   query: joi.object({
-    term: joi.string().valid('first', 'second', 'summer'),
-    grade: joi.string().valid('1', '2', '3', '4', '5', '6', '7', '8', '9'),
+    term: joi.string().valid(...termEnum),
+    grade: joi.string().valid(...gradeEnum),
     year: joi.date().format('YYYY'),
-    learningMode: joi.string().valid('offline', 'online', 'hybrid'),
+    learningMode: joi.string().valid(...learningModeEnum),
   }),
 }
 export const adminClassroomCreateClassroomSchema = {
   body: joi.object({
-    term: joi.string().valid('first', 'second', 'summer').required(),
+    term: joi
+      .string()
+      .valid(...termEnum)
+      .required(),
     grade: joi
       .string()
-      .valid('1', '2', '3', '4', '5', '6', '7', '8', '9')
+      .valid(...gradeEnum)
       .required(),
     year: joi.date().format('YYYY').required(),
-    learningMode: joi.string().valid('offline', 'online', 'hybrid').required(),
+    learningMode: joi
+      .string()
+      .valid(...learningModeEnum)
+      .required(),
   }),
 }
 export const adminClassroomUpdateClassroomSchema = {
   body: joi.object({
-    term: joi.string().valid('first', 'second', 'summer'),
-    grade: joi.string().valid('1', '2', '3', '4', '5', '6', '7', '8', '9'),
+    term: joi.string().valid(...termEnum),
+    grade: joi.string().valid(...gradeEnum),
     year: joi.date().format('YYYY'),
-    learningMode: joi.string().valid('offline', 'online', 'hybrid'),
+    learningMode: joi.string().valid(...learningModeEnum),
     courseId: joi.number(),
   }),
 }

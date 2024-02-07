@@ -1,5 +1,10 @@
 import { DataTypes } from 'sequelize'
 import { sql_config } from '../connection.js'
+import {
+  feesStatusEnum,
+  genderEnum,
+  gradeEnum,
+} from '../../src/utils/generalConstants.js'
 const Student = sql_config.define(
   'tbl_student',
   {
@@ -47,7 +52,7 @@ const Student = sql_config.define(
     },
     feesStatus: {
       type: DataTypes.ENUM,
-      values: ['paid', 'notPaid'],
+      values: feesStatusEnum,
       required: true,
       allowNull: false,
     },
@@ -63,13 +68,13 @@ const Student = sql_config.define(
     },
     gender: {
       type: DataTypes.ENUM,
-      values: ['male', 'female'],
+      values: genderEnum,
       required: true,
       allowNull: false,
     },
     grade: {
       type: DataTypes.ENUM,
-      values: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+      values: gradeEnum,
       required: true,
       allowNull: false,
     },

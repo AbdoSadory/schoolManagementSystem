@@ -1,5 +1,10 @@
 import { DataTypes } from 'sequelize'
 import { sql_config } from '../connection.js'
+import {
+  gradeEnum,
+  learningModeEnum,
+  termEnum,
+} from '../../src/utils/generalConstants.js'
 
 const ClassRoom = sql_config.define(
   'tbl_classRoom',
@@ -11,13 +16,13 @@ const ClassRoom = sql_config.define(
     },
     term: {
       type: DataTypes.ENUM,
-      values: ['first', 'second', 'summer'],
+      values: termEnum,
       required: true,
       allowNull: false,
     },
     grade: {
       type: DataTypes.ENUM,
-      values: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+      values: gradeEnum,
       required: true,
       allowNull: false,
     },
@@ -28,7 +33,7 @@ const ClassRoom = sql_config.define(
     },
     learningMode: {
       type: DataTypes.ENUM,
-      values: ['offline', 'online', 'hybrid'],
+      values: learningModeEnum,
       required: true,
       allowNull: false,
     },

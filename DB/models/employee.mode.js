@@ -1,5 +1,13 @@
 import { DataTypes } from 'sequelize'
 import { sql_config } from '../connection.js'
+import {
+  courseSpecializationEnum,
+  educationDegreeEnum,
+  employeePositionEnum,
+  employeeTypeEnum,
+  genderEnum,
+  maritalStatusEnum,
+} from '../../src/utils/generalConstants.js'
 
 const Employee = sql_config.define(
   'tbl_employee',
@@ -49,13 +57,13 @@ const Employee = sql_config.define(
     },
     gender: {
       type: DataTypes.ENUM,
-      values: ['male', 'female'],
+      values: genderEnum,
       required: true,
       allowNull: false,
     },
     maritalStatus: {
       type: DataTypes.ENUM,
-      values: ['married', 'widowed', 'separated', 'divorced', 'single'],
+      values: maritalStatusEnum,
       required: true,
       allowNull: false,
     },
@@ -66,33 +74,24 @@ const Employee = sql_config.define(
     },
     educationDegree: {
       type: DataTypes.ENUM,
-      values: ['associate', 'bachelor', 'master', 'doctorate'],
+      values: educationDegreeEnum,
       required: true,
       allowNull: false,
     },
     employeePosition: {
       type: DataTypes.ENUM,
-      values: ['junior', 'mid-level', 'senior', 'team-leader', 'manager'],
+      values: employeePositionEnum,
       required: true,
       allowNull: false,
     },
     specialization: {
       type: DataTypes.ENUM,
-      values: [
-        'languages',
-        'history',
-        'science',
-        'mathematics',
-        'sports',
-        'art',
-        'technology',
-        'music',
-      ],
+      values: courseSpecializationEnum,
       allowNull: true,
     },
     employeeType: {
       type: DataTypes.ENUM,
-      values: ['owner', 'ceo', 'teacher', 'director', 'hr', 'others'],
+      values: employeeTypeEnum,
       required: true,
       allowNull: false,
     },

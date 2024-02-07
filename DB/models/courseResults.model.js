@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize'
 import { sql_config } from '../connection.js'
+import { termEnum } from '../../src/utils/generalConstants.js'
 const CourseResults = sql_config.define(
   'tbl_courseResult',
   {
@@ -15,26 +16,27 @@ const CourseResults = sql_config.define(
     },
     term: {
       type: DataTypes.ENUM,
-      values: ['first', 'second', 'summer'],
+      values: termEnum,
       required: true,
       allowNull: false,
     },
     oral: {
       type: DataTypes.FLOAT,
-      allowNull: true,
+      required: true,
+      allowNull: false,
+      defaultValue: 0,
     },
     practical: {
       type: DataTypes.FLOAT,
-      allowNull: true,
-    },
-    practical: {
-      type: DataTypes.FLOAT,
-      allowNull: true,
+      required: true,
+      allowNull: false,
+      defaultValue: 0,
     },
     midterm: {
       type: DataTypes.FLOAT,
       required: true,
       allowNull: false,
+      defaultValue: 0,
     },
     final: {
       type: DataTypes.FLOAT,

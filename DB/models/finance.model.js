@@ -9,7 +9,7 @@ const Finance = sql_config.define(
       primaryKey: true,
     },
     year: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       required: true,
       allowNull: false,
       unique: true,

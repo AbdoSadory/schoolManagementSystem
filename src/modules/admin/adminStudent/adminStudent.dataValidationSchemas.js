@@ -1,4 +1,9 @@
 import Joi from 'joi'
+import {
+  feesStatusEnum,
+  genderEnum,
+  gradeEnum,
+} from '../../../utils/generalConstants.js'
 
 export const adminStudentCreateStudent = {
   body: Joi.object({
@@ -17,13 +22,19 @@ export const adminStudentCreateStudent = {
       }),
     totalFees: Joi.number(),
     paidFees: Joi.number(),
-    feesStatus: Joi.string().trim().valid('paid', 'notPaid').required(),
+    feesStatus: Joi.string()
+      .trim()
+      .valid(...feesStatusEnum)
+      .required(),
     nationality: Joi.string().trim().required(),
     age: Joi.number().required(),
-    gender: Joi.string().trim().valid('male', 'female').required(),
+    gender: Joi.string()
+      .trim()
+      .valid(...genderEnum)
+      .required(),
     grade: Joi.string()
       .trim()
-      .valid('1', '2', '3', '4', '5', '6', '7', '8', '9')
+      .valid(...gradeEnum)
       .required(),
   }).with('email', 'password'),
 }
@@ -38,13 +49,17 @@ export const adminStudentUpdateStudent = {
     parentPhoneNumber: Joi.string().trim().min(7).max(15),
     totalFees: Joi.number(),
     paidFees: Joi.number(),
-    feesStatus: Joi.string().trim().valid('paid', 'notPaid'),
+    feesStatus: Joi.string()
+      .trim()
+      .valid(...feesStatusEnum),
     nationality: Joi.string().trim(),
     age: Joi.number(),
-    gender: Joi.string().trim().valid('male', 'female'),
+    gender: Joi.string()
+      .trim()
+      .valid(...genderEnum),
     grade: Joi.string()
       .trim()
-      .valid('1', '2', '3', '4', '5', '6', '7', '8', '9'),
+      .valid(...gradeEnum),
   }),
 }
 

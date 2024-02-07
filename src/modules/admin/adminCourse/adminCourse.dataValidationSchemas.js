@@ -1,37 +1,21 @@
 import Joi from 'joi'
+import {
+  courseSpecializationEnum,
+  courseTitleEnum,
+  gradeEnum,
+  learningModeEnum,
+} from '../../../utils/generalConstants.js'
 
 export const adminCourseCreateCourse = {
   body: Joi.object({
     title: Joi.string()
       .trim()
-      .valid(
-        'english',
-        'french',
-        'history',
-        'mathematics',
-        'statistics',
-        'physics',
-        'chemistry',
-        'biology',
-        'zoology',
-        'computer science',
-        'sport',
-        'art',
-        'music'
-      )
+      .valid(...courseTitleEnum)
       .required(),
     description: Joi.string().trim(),
     specialization: Joi.string()
       .trim()
-      .valid(
-        'languages',
-        'history',
-        'science',
-        'mathematics',
-        'sports',
-        'art',
-        'music'
-      )
+      .valid(...courseSpecializationEnum)
       .required()
       .when('title', [
         {
@@ -59,11 +43,11 @@ export const adminCourseCreateCourse = {
       ]),
     grade: Joi.string()
       .trim()
-      .valid('1', '2', '3', '4', '5', '6', '7', '8', '9')
+      .valid(...gradeEnum)
       .required(),
     learningMode: Joi.string()
       .trim()
-      .valid('offline', 'online', 'hybrid')
+      .valid(...learningModeEnum)
       .required(),
   }),
 }
@@ -75,33 +59,11 @@ export const adminCourseUpdateCourse = {
   body: Joi.object({
     title: Joi.string()
       .trim()
-      .valid(
-        'english',
-        'french',
-        'history',
-        'mathematics',
-        'statistics',
-        'physics',
-        'chemistry',
-        'biology',
-        'zoology',
-        'computer science',
-        'sport',
-        'art',
-        'music'
-      ),
+      .valid(...courseTitleEnum),
     description: Joi.string().trim(),
     specialization: Joi.string()
       .trim()
-      .valid(
-        'languages',
-        'history',
-        'science',
-        'mathematics',
-        'sports',
-        'art',
-        'music'
-      )
+      .valid(...courseSpecializationEnum)
       .when('title', [
         {
           is: Joi.string().valid('english', 'french'),
@@ -131,6 +93,6 @@ export const adminCourseUpdateCourse = {
       ]),
     grade: Joi.string()
       .trim()
-      .valid('1', '2', '3', '4', '5', '6', '7', '8', '9'),
+      .valid(...gradeEnum),
   }).with('title', 'specialization'),
 }
