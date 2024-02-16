@@ -12,6 +12,7 @@ import adminCourse from './adminCourse/adminCourse.routes.js'
 import adminFinance from './adminFinance/adminFinance.routes.js'
 import adminClassroom from './adminClassroom/adminClassroom.routes.js'
 import adminCourseResults from './adminCourseResults/adminCourseResults.routes.js'
+import adminTeacherCourses from './teacherCourses/teacherCourses.routes.js'
 
 const adminRouter = Router()
 
@@ -32,4 +33,5 @@ adminRouter.use('/course', adminCourse)
 adminRouter.use('/finance', adminFinance)
 adminRouter.use('/classroom', adminClassroom)
 adminRouter.use('/courseResults', adminCourseResults)
+adminRouter.use('/teacherCourses', adminTeacherCourses)
 export default adminRouter

@@ -12,39 +12,55 @@ export const allAssociations = () => {
   // ======================= Employee to ClassRoom Many-To-Many ============== //
   Employee.belongsToMany(ClassRoom, {
     through: TeachersClassRooms,
-    foreignKey: { name: 'teacherId' },
   })
   ClassRoom.belongsToMany(Employee, {
     through: TeachersClassRooms,
-    foreignKey: { name: 'classRoomId' },
   })
+  Employee.hasMany(TeachersClassRooms, {
+    foreignKey: { name: 'tblEmployeeId' },
+  })
+  TeachersClassRooms.belongsTo(Employee)
+  ClassRoom.hasMany(TeachersClassRooms, {
+    foreignKey: { name: 'tblClassRoomId' },
+  })
+  TeachersClassRooms.belongsTo(ClassRoom)
   // ======================= Employee to Course Many-To-Many ============== //
   Employee.belongsToMany(Course, {
     through: TeachersCourses,
-    foreignKey: { name: 'teacherId' },
   })
   Course.belongsToMany(Employee, {
     through: TeachersCourses,
-    foreignKey: { name: 'courseId' },
   })
+  Employee.hasMany(TeachersCourses, { foreignKey: { name: 'tblEmployeeId' } })
+  TeachersCourses.belongsTo(Employee)
+  Course.hasMany(TeachersCourses, { foreignKey: { name: 'tblCourseId' } })
+  TeachersCourses.belongsTo(Course)
   // ======================= Student to ClassRoom Many-To-Many ============== //
   Student.belongsToMany(ClassRoom, {
     through: StudentsClassRooms,
-    foreignKey: { name: 'studentId' },
   })
   ClassRoom.belongsToMany(Student, {
     through: StudentsClassRooms,
-    foreignKey: { name: 'classRoomId' },
   })
+  Student.hasMany(StudentsClassRooms, { foreignKey: { name: 'tblStudentId' } })
+  StudentsClassRooms.belongsTo(Student)
+  ClassRoom.hasMany(StudentsClassRooms, {
+    foreignKey: { name: 'tblClassRoomId' },
+  })
+  StudentsClassRooms.belongsTo(ClassRoom)
   // ======================= Student to Course Many-To-Many ============== //
   Student.belongsToMany(Course, {
     through: StudentsCourses,
-    foreignKey: { name: 'studentId' },
   })
   Course.belongsToMany(Student, {
     through: StudentsCourses,
-    foreignKey: { name: 'courseId' },
   })
+  Student.hasMany(StudentsCourses, { foreignKey: { name: 'tblStudentId' } })
+  StudentsCourses.belongsTo(Student)
+  Course.hasMany(StudentsCourses, {
+    foreignKey: { name: 'tblCourseId' },
+  })
+  StudentsCourses.belongsTo(Course)
   // ======================= Student to CourseResults One-To-Many ============== //
   Student.hasMany(CourseResults, {
     onUpdate: 'NO ACTION',

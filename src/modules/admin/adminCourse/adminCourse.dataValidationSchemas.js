@@ -40,7 +40,10 @@ export const adminCourseCreateCourse = {
         { is: Joi.string().valid('sport'), then: 'sports' },
         { is: Joi.string().valid('art'), then: 'art' },
         { is: Joi.string().valid('music'), then: 'music' },
-      ]),
+      ])
+      .messages({
+        '*': 'The title of the course must be related to specialization',
+      }),
     grade: Joi.string()
       .trim()
       .valid(...gradeEnum)

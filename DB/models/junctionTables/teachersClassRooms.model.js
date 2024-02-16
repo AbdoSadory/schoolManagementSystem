@@ -11,14 +11,14 @@ const TeachersClassRooms = sql_config.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    teacherId: {
+    tblEmployeeId: {
       type: DataTypes.UUID,
       references: {
         model: Employee,
         key: 'id',
       },
     },
-    classRoomId: {
+    tblClassRoomId: {
       type: DataTypes.INTEGER,
       references: {
         model: ClassRoom,

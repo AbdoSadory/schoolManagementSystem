@@ -59,6 +59,20 @@ export const createEmployee = async (req, res, next) => {
   if (isEmailExisted) {
     return next(new Error('This Email is already existed', { cause: 400 }))
   }
+  if (
+    employeeType === 'owner' ||
+    employeeType === 'ceo' ||
+    employeeType === 'director'
+  ) {
+    const isEmployeeTypeExisted = await Employee.findOne({
+      where: { employeeType },
+    })
+    if (isEmployeeTypeExisted) {
+      return next(
+        new Error('This employeeType is already existed', { cause: 400 })
+      )
+    }
+  }
   const hashedPassword = bcryptjs.hashSync(password, parseInt(process.env.SALT))
   const newEmployee = await Employee.create({
     name,
