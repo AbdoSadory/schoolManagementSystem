@@ -23,8 +23,20 @@ export const getAllCourses = async (req, res, next) => {
     courses: courses.length ? courses : 'No Courses',
   })
 }
+// ========================== Create Course ===================//
 export const createCourse = async (req, res, next) => {
   const { title, description, specialization, learningMode, grade } = req.body
+  // check by title, specialization, grade, learningMode bc description is dynamic
+  const isCourseExisted = await Course.findOne({
+    where: {
+      title,
+      specialization,
+      grade,
+      learningMode,
+    },
+  })
+  if (isCourseExisted)
+    return next(new Error('This Course is already existed', { cause: 409 }))
 
   const newCourse = await Course.create({
     title,
@@ -34,10 +46,12 @@ export const createCourse = async (req, res, next) => {
     grade,
   })
   if (!newCourse) {
-    return next(new Error('Error While Creating Student'))
+    return next(new Error('Error While Creating Course'))
   }
-  res.json({ message: 'New Student', newCourse })
+  res.json({ message: 'New Course', newCourse })
 }
+
+// ========================== update Course ===================//
 export const updateCourse = async (req, res, next) => {
   const { title, description, specialization, learningMode, grade } = req.body
   const { courseId } = req.params
@@ -53,6 +67,19 @@ export const updateCourse = async (req, res, next) => {
     )
   }
 
+  const isUpdatedCourseExisted = await Course.findOne({
+    where: {
+      id: { [Op.ne]: courseId },
+      title: title || isCourseExisted.title,
+      specialization: specialization || isCourseExisted.specialization,
+      learningMode: learningMode || isCourseExisted.learningMode,
+      grade: grade || isCourseExisted.grade,
+    },
+  })
+
+  if (isUpdatedCourseExisted)
+    return next(new Error('This course with new values is already existed'))
+
   title && (isCourseExisted.title = title)
   description && (isCourseExisted.description = description)
   specialization && (isCourseExisted.specialization = specialization)
@@ -65,6 +92,7 @@ export const updateCourse = async (req, res, next) => {
   }
   res.status(200).json({ message: 'Updated Course', updatedCourse })
 }
+// ========================== delete Course ===================//
 export const deleteCourse = async (req, res, next) => {
   const { courseId } = req.params
   const isCourseExisted = await Course.findOne({
