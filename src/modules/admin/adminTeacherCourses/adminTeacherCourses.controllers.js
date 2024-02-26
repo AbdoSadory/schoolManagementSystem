@@ -1,3 +1,4 @@
+import { Op } from 'sequelize'
 import Course from '../../../../DB/models/course.model.js'
 import Employee from '../../../../DB/models/employee.mode.js'
 import TeachersCourses from '../../../../DB/models/junctionTables/teacherCourse.model.js'
@@ -20,7 +21,7 @@ export const getAllTeachersCourses = async (req, res, next) => {
 
 /**
  * check if course is existed
- * check if the teacher is existed
+ * check if the employee is existed
  * check if the employee is teacher
  * check if the course and teacher is already existed
  * check if the teacher is the same specialization of the course
@@ -80,6 +81,18 @@ export const updateTeachersCourses = async (req, res, next) => {
   if (!isTeacherCourseExisted)
     return next(new Error('No teacher-course with this id'), { cause: 404 })
 
+  const isUpdatedTeacherCourseExisted = await TeachersCourses.findOne({
+    where: {
+      id: { [Op.ne]: teacherCourseId },
+      tblEmployeeId: teacherId || isTeacherCourseExisted.tblEmployeeId,
+      tblCourseId: courseId || isTeacherCourseExisted.tblCourseId,
+    },
+  })
+
+  if (isUpdatedTeacherCourseExisted)
+    return next(
+      new Error("There's already teacher-course existed", { cause: 409 })
+    )
   if (teacherId) {
     const isEmployeeExisted = await Employee.findByPk(teacherId)
     if (!isEmployeeExisted) return next(new Error('No Employee with this id'))
@@ -108,18 +121,6 @@ export const updateTeachersCourses = async (req, res, next) => {
 
     isTeacherCourseExisted.tblCourseId = courseId
   }
-
-  const isUpdatedTeacherCourseExisted = await TeachersCourses.findOne({
-    where: {
-      tblEmployeeId: teacherId || isTeacherCourseExisted.tblEmployeeId,
-      tblCourseId: courseId || isTeacherCourseExisted.tblCourseId,
-    },
-  })
-
-  if (isUpdatedTeacherCourseExisted)
-    return next(
-      new Error("There's already teacher-course existed", { cause: 409 })
-    )
 
   const updatedTeacherCourse = await isTeacherCourseExisted.save()
 

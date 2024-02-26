@@ -45,8 +45,7 @@ export const getClassroomUsingCourseId = async (req, res, next) => {
   })
 }
 export const createClassroom = async (req, res, next) => {
-  const { term, grade, year, learningMode } = req.body
-  const { courseId } = req.params
+  const { term, grade, year, learningMode, courseId } = req.body
 
   const isCourseExisted = await Course.findByPk(courseId)
   if (!isCourseExisted) return next(new Error('No Course with this id'))

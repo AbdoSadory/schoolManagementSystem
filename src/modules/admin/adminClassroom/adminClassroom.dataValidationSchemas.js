@@ -30,6 +30,7 @@ export const adminClassroomCreateClassroomSchema = {
       .string()
       .valid(...learningModeEnum)
       .required(),
+    courseId: joi.number().required(),
   }),
 }
 export const adminClassroomUpdateClassroomSchema = {

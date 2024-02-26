@@ -59,6 +59,15 @@ export const createEmployee = async (req, res, next) => {
   if (isEmailExisted) {
     return next(new Error('This Email is already existed', { cause: 400 }))
   }
+  const isPhoneNumberExisted = await Employee.findOne({
+    where: { phoneNumber },
+  })
+  if (isPhoneNumberExisted) {
+    return next(
+      new Error('This Phone Number is already existed', { cause: 400 })
+    )
+  }
+
   if (
     employeeType === 'owner' ||
     employeeType === 'ceo' ||

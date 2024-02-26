@@ -90,14 +90,6 @@ export const getCourseResultByStudentId = async (req, res, next) => {
 export const createCourseResult = async (req, res, next) => {
   const { year, term, oral, practical, midterm, final, studentId, courseId } =
     req.body
-  const totalResult = oral + practical + midterm + final
-  if (totalResult !== 100)
-    return next(
-      new Error(
-        'The summation of oral, practical, midterm, final must be equal 100',
-        { cause: 400 }
-      )
-    )
 
   const isCourseResultExisted = await CourseResults.findOne({
     where: {
@@ -112,6 +104,16 @@ export const createCourseResult = async (req, res, next) => {
       })
     )
   }
+
+  const totalResult = oral + practical + midterm + final
+  if (totalResult !== 100)
+    return next(
+      new Error(
+        'The summation of oral, practical, midterm, final must be equal 100',
+        { cause: 400 }
+      )
+    )
+
   const isStudentExisted = await Student.findByPk(studentId)
   if (!isStudentExisted)
     return next(new Error('no student with this id', { cause: 404 }))

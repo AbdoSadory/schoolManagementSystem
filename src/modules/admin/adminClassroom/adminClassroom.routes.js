@@ -30,7 +30,7 @@ adminClassroom.get(
 )
 
 adminClassroom.post(
-  '/:courseId',
+  '/',
   dataValidationHandler(
     dataValidationSchemas.adminClassroomCreateClassroomSchema
   ),

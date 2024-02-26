@@ -1,15 +1,15 @@
 import expressAsyncHandler from 'express-async-handler'
 import { Router } from 'express'
-import * as adminTeachersCoursesControllers from './teacherCourses.controllers.js'
+import * as adminTeachersCoursesControllers from './adminTeacherCourses.controllers.js'
 import dataValidationHandler from '../../../middlewares/dataValidationHandler.js'
-import * as adminTeachersCoursesDataValidationSchemas from './teacherCourses.dataValidationSchemas.js'
+import * as adminTeachersCoursesDataValidationSchemas from './adminTeacherCourses.dataValidationSchemas.js'
 
 const adminTeacherCourses = Router({ mergeParams: true })
 
 adminTeacherCourses.get(
   '/',
   dataValidationHandler(
-    adminTeachersCoursesDataValidationSchemas.adminTeachersCoursesGetAllTeachersCoursesSchema
+    adminTeachersCoursesDataValidationSchemas.adminTeachersCoursesGetAllSchema
   ),
   expressAsyncHandler(adminTeachersCoursesControllers.getAllTeachersCourses)
 )
@@ -17,7 +17,7 @@ adminTeacherCourses.get(
 adminTeacherCourses.post(
   '/addTeachersCourses',
   dataValidationHandler(
-    adminTeachersCoursesDataValidationSchemas.adminTeachersCoursesCreateTeachersCoursesSchema
+    adminTeachersCoursesDataValidationSchemas.adminTeachersCoursesCreateSchema
   ),
   expressAsyncHandler(adminTeachersCoursesControllers.createTeachersCourses)
 )
@@ -26,13 +26,13 @@ adminTeacherCourses
   .route('/:teacherCourseId')
   .put(
     dataValidationHandler(
-      adminTeachersCoursesDataValidationSchemas.adminTeachersCoursesUpdateTeachersCoursesSchema
+      adminTeachersCoursesDataValidationSchemas.adminTeachersCoursesUpdateSchema
     ),
     expressAsyncHandler(adminTeachersCoursesControllers.updateTeachersCourses)
   )
   .delete(
     dataValidationHandler(
-      adminTeachersCoursesDataValidationSchemas.adminTeachersCoursesDeleteTeachersCoursesSchema
+      adminTeachersCoursesDataValidationSchemas.adminTeachersCoursesDeleteSchema
     ),
     expressAsyncHandler(adminTeachersCoursesControllers.deleteTeachersCourses)
   )
