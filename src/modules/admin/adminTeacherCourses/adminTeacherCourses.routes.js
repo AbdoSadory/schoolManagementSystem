@@ -15,7 +15,7 @@ adminTeacherCourses.get(
 )
 
 adminTeacherCourses.post(
-  '/addTeachersCourses',
+  '/addTeacherCourses',
   dataValidationHandler(
     adminTeachersCoursesDataValidationSchemas.adminTeachersCoursesCreateSchema
   ),

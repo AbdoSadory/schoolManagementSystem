@@ -2,6 +2,7 @@ import bcryptjs from 'bcryptjs'
 import Student from '../../../../DB/models/student.model.js'
 import cloudinaryConnection from '../../../utils/mediaHostConnection.js'
 import { Op } from 'sequelize'
+import Employee from '../../../../DB/models/employee.mode.js'
 
 export const getAllStudents = async (req, res, next) => {
   const { name, email } = req.query
@@ -50,11 +51,12 @@ export const createStudent = async (req, res, next) => {
     grade,
   } = req.body
 
+  //check if email is already existed
   const isStudentExisted = await Student.findOne({ where: { email } })
   if (isStudentExisted) {
-    return next(new Error('This Email is already existed', { cause: 400 }))
+    return next(new Error('This Email is already existed', { cause: 409 }))
   }
-  const hashedPassword = bcryptjs.hashSync(password, parseInt(process.env.SALT))
+  //check if phone is already existed for another student
   const isPhoneNumberExistedForAnotherStudent = await Student.findOne({
     where: { phoneNumber },
   })
@@ -63,11 +65,12 @@ export const createStudent = async (req, res, next) => {
       new Error(
         'This Phone Number is already existed for another student, try another one',
         {
-          cause: 400,
+          cause: 409,
         }
       )
     )
   }
+  //check if phone is already existed as parent phone number
   const isPhoneNumberExistedForParentPhone = await Student.findOne({
     where: { parentPhoneNumber: phoneNumber },
   })
@@ -76,12 +79,28 @@ export const createStudent = async (req, res, next) => {
       new Error(
         'This Phone Number is already existed for parent phone number, try another one',
         {
-          cause: 400,
+          cause: 409,
         }
       )
     )
   }
 
+  //check if phone is already existed at employee collection
+  const isPhoneNumberExistedForEmployee = await Employee.findOne({
+    where: { phoneNumber },
+  })
+  if (isPhoneNumberExistedForEmployee) {
+    return next(
+      new Error(
+        'This Phone Number is already existed for employee phone number, try another one',
+        {
+          cause: 409,
+        }
+      )
+    )
+  }
+  //hashing password
+  const hashedPassword = bcryptjs.hashSync(password, parseInt(process.env.SALT))
   const newStudent = await Student.create({
     name,
     email,

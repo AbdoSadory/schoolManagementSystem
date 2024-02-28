@@ -16,5 +16,5 @@ export const connectDB = async () => {
     .then((res) => {
       console.log('🟢 DB is connected')
     })
-    .catch((err) => console.log('🔴', err))
+    .catch((err) => console.log('🔴', err.message))
 }
