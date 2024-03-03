@@ -82,7 +82,7 @@ const Employee = sql_config.define(
       type: DataTypes.ENUM,
       values: employeePositionEnum,
       required: true,
-      allowNull: false,
+      allowNull: true,
     },
     specialization: {
       type: DataTypes.ENUM,
