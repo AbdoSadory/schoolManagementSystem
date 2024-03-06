@@ -297,11 +297,12 @@ export const restoreStudent = async (req, res, next) => {
   const isStudentExisted = await Student.findByPk(courseId, {
     paranoid: false,
   })
-  if (!isStudentExisted) return next(new Error('No Student with this id'))
+  if (!isStudentExisted)
+    return next(new Error('No Student with this id', { cause: 404 }))
 
   const restoredStudent = await isStudentExisted.restore()
 
-  if (!restoredStudent) return next(new Error('error while restoring Student'))
+  if (!restoredStudent) return next(new Error('Error while restoring Student'))
 
   res.status(200).json({
     message: 'Student has been restored successfully',

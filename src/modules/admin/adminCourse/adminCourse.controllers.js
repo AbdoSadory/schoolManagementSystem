@@ -108,7 +108,11 @@ export const updateCourse = async (req, res, next) => {
   })
 
   if (isUpdatedCourseExisted)
-    return next(new Error('This course with new values is already existed'))
+    return next(
+      new Error('This course with new values is already existed', {
+        cause: 409,
+      })
+    )
 
   title && (isCourseExisted.title = title)
   description && (isCourseExisted.description = description)
@@ -152,7 +156,8 @@ export const restoreCourse = async (req, res, next) => {
   const isCourseExisted = await Course.findByPk(courseId, {
     paranoid: false,
   })
-  if (!isCourseExisted) return next(new Error('No Course with this id'))
+  if (!isCourseExisted)
+    return next(new Error('No Course with this id', { cause: 404 }))
 
   const restoredCourse = await isCourseExisted.restore()
 

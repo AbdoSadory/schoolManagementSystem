@@ -272,12 +272,13 @@ export const restoreEmployee = async (req, res, next) => {
   const isEmployeeExisted = await Employee.findByPk(employeeId, {
     paranoid: false,
   })
-  if (!isEmployeeExisted) return next(new Error('No Employee with this id'))
+  if (!isEmployeeExisted)
+    return next(new Error('No Employee with this id', { cause: 404 }))
 
   const restoredEmployee = await isEmployeeExisted.restore()
 
   if (!restoredEmployee)
-    return next(new Error('error while restoring employee'))
+    return next(new Error('Error while restoring employee'))
 
   res.status(200).json({
     message: 'Employee has been restored successfully',

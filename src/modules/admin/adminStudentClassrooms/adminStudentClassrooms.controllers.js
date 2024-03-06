@@ -36,20 +36,26 @@ export const createStudentsClassroom = async (req, res, next) => {
     include: { model: Course },
   })
 
-  if (!isClassroomExisted) return next(new Error('No classroom with this id'))
+  if (!isClassroomExisted)
+    return next(new Error('No classroom with this id', { cause: 404 }))
   if (!isClassroomExisted.isActive)
-    return next(new Error("this classroom isn't active"))
+    return next(new Error("this classroom isn't active", { cause: 409 }))
 
   //  check if the Student is existed
   const isStudentExisted = await Student.findByPk(studentId)
-  if (!isStudentExisted) return next(new Error('No Student with this id'))
+  if (!isStudentExisted)
+    return next(new Error('No Student with this id', { cause: 404 }))
 
   // check if the student classroom is existed
   const isStudentClassroomExisted = await StudentsClassRooms.findOne({
     where: { tblStudentId: studentId, tblClassRoomId: classroomId },
   })
   if (isStudentClassroomExisted)
-    return next(new Error('Student and Classroom record is already existed'))
+    return next(
+      new Error('Student and Classroom record is already existed', {
+        cause: 409,
+      })
+    )
 
   // check if the student has enrolled to this course
   const isStudentEnrolledToTheCourse = await StudentsCourses.findOne({
@@ -131,9 +137,10 @@ export const updateStudentsClassroom = async (req, res, next) => {
     const isClassroomExisted = await ClassRoom.findByPk(classroomId, {
       include: { model: Course },
     })
-    if (!isClassroomExisted) return next(new Error('No classroom with this id'))
+    if (!isClassroomExisted)
+      return next(new Error('No classroom with this id', { cause: 404 }))
     if (!isClassroomExisted.isActive)
-      return next(new Error("this classroom isn't active"))
+      return next(new Error("this classroom isn't active", { cause: 409 }))
 
     const isStudentEnrolledToTheCourse = await StudentsCourses.findOne({
       where: {
@@ -198,12 +205,12 @@ export const restoreStudentsClassroom = async (req, res, next) => {
     }
   )
   if (!isStudentsClassroomExisted)
-    return next(new Error('No StudentsClassroom with this id'))
+    return next(new Error('No StudentsClassroom with this id', { cause: 404 }))
 
   const restoredStudentsClassroom = await isStudentsClassroomExisted.restore()
 
   if (!restoredStudentsClassroom)
-    return next(new Error('error while restoring StudentsClassroom'))
+    return next(new Error('Error while restoring StudentsClassroom'))
 
   res.status(200).json({
     message: 'Students-Classroom has been restored successfully',

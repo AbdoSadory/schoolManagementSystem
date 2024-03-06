@@ -22,7 +22,8 @@ export const getClassroomUsingId = async (req, res, next) => {
   const isClassroomExisted = await ClassRoom.findByPk(classroomId, {
     include: Course,
   })
-  if (!isClassroomExisted) return next(new Error('No Classroom with this id'))
+  if (!isClassroomExisted)
+    return next(new Error('No Classroom with this id', { cause: 404 }))
 
   res.status(200).json({ message: 'Classroom', classroom: isClassroomExisted })
 }
@@ -30,7 +31,8 @@ export const getClassroomUsingCourseId = async (req, res, next) => {
   const { courseId } = req.params
 
   const isCourseExisted = await Course.findByPk(courseId)
-  if (!isCourseExisted) return next(new Error('No Course with this id'))
+  if (!isCourseExisted)
+    return next(new Error('No Course with this id', { cause: 404 }))
 
   const classrooms = await ClassRoom.findAll({
     where: {
@@ -48,13 +50,15 @@ export const createClassroom = async (req, res, next) => {
   const { term, grade, year, learningMode, courseId } = req.body
 
   const isCourseExisted = await Course.findByPk(courseId)
-  if (!isCourseExisted) return next(new Error('No Course with this id'))
+  if (!isCourseExisted)
+    return next(new Error('No Course with this id', { cause: 404 }))
 
   // check if the course grade level doesn't equal the classroom grade
   if (isCourseExisted.grade !== grade) {
     return next(
       new Error(
-        'Course grade is not the same level with your entered classroom grade'
+        'Course grade is not the same level with your entered classroom grade',
+        { cause: 409 }
       )
     )
   }
@@ -62,7 +66,8 @@ export const createClassroom = async (req, res, next) => {
   if (isCourseExisted.learningMode !== learningMode) {
     return next(
       new Error(
-        'Course learningMode is not the same like your entered classroom learningMode'
+        'Course learningMode is not the same like your entered classroom learningMode',
+        { cause: 409 }
       )
     )
   }
@@ -123,7 +128,8 @@ export const updateClassroom = async (req, res, next) => {
   const isClassroomExisted = await ClassRoom.findByPk(classroomId, {
     include: Course,
   })
-  if (!isClassroomExisted) return next(new Error('No Classroom with this id'))
+  if (!isClassroomExisted)
+    return next(new Error('No Classroom with this id', { cause: 404 }))
 
   term && (isClassroomExisted.term = term)
   grade && (isClassroomExisted.grade = grade)
@@ -132,12 +138,14 @@ export const updateClassroom = async (req, res, next) => {
 
   if (courseId) {
     const isCourseExisted = await Course.findByPk(courseId)
-    if (!isCourseExisted) return next(new Error('No Course with this id'))
+    if (!isCourseExisted)
+      return next(new Error('No Course with this id', { cause: 404 }))
     // check if the course grade level doesn't equal the classroom grade
     if (isCourseExisted.grade !== isClassroomExisted.grade) {
       return next(
         new Error(
-          'Course grade is not the same grade level of entered classroom grade'
+          'Course grade is not the same grade level of entered classroom grade',
+          { cause: 409 }
         )
       )
     }
@@ -148,7 +156,8 @@ export const updateClassroom = async (req, res, next) => {
     ) {
       return next(
         new Error(
-          'Course learningMode is not the same like your entered or old classroom learningMode'
+          'Course learningMode is not the same like your entered or old classroom learningMode',
+          { cause: 409 }
         )
       )
     }
@@ -177,7 +186,8 @@ export const deleteClassroom = async (req, res, next) => {
   const isClassroomExisted = await ClassRoom.findByPk(classroomId, {
     include: Course,
   })
-  if (!isClassroomExisted) return next(new Error('No Classroom with this id'))
+  if (!isClassroomExisted)
+    return next(new Error('No Classroom with this id', { cause: 404 }))
 
   await isClassroomExisted.destroy()
 
@@ -189,12 +199,13 @@ export const restoreClassroom = async (req, res, next) => {
   const isClassroomExisted = await ClassRoom.findByPk(classroomId, {
     paranoid: false,
   })
-  if (!isClassroomExisted) return next(new Error('No Classroom with this id'))
+  if (!isClassroomExisted)
+    return next(new Error('No Classroom with this id', { cause: 404 }))
 
   const restoredClassroom = await isClassroomExisted.restore()
 
   if (!restoredClassroom)
-    return next(new Error('error while restoring classroom'))
+    return next(new Error('Error while restoring classroom'))
   res.status(200).json({
     message: 'Classroom has been restored successfully',
     restoredClassroom,

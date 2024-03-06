@@ -274,12 +274,12 @@ export const restoreCourseResult = async (req, res, next) => {
     paranoid: false,
   })
   if (!isCourseResultExisted)
-    return next(new Error('No Course-Result with this id'))
+    return next(new Error('No Course-Result with this id', { cause: 404 }))
 
   const restoredCourseResult = await isCourseResultExisted.restore()
 
   if (!restoredCourseResult)
-    return next(new Error('error while restoring course-result'))
+    return next(new Error('Error while restoring course-result'))
 
   res.status(200).json({
     message: 'Course-Result has been restored successfully',

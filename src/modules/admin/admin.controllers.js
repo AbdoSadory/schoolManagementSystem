@@ -27,14 +27,14 @@ export const signUp = async (req, res, next) => {
   const isUserExisted = await Admin.findOne({ where: { email } })
   if (isUserExisted)
     return next(new Error('This Email is already existed', { cause: 409 }))
-  console.log(process.env.SALT)
   const hashedPassword = bcryptjs.hashSync(password, parseInt(process.env.SALT))
-  const user = await Admin.create({
+  const newAdmin = await Admin.create({
     name,
     email,
     password: hashedPassword,
   })
-  if (!user) return next(new Error('Please try again'))
+  if (!newAdmin)
+    return next(new Error('Error while creating Admin, Please try again'))
 
-  res.status(201).json({ message: 'New Admin has been created', user })
+  res.status(201).json({ message: 'New Admin has been created', newAdmin })
 }

@@ -31,7 +31,8 @@ export const createTeachersCourses = async (req, res, next) => {
   const { courseId, teacherId } = req.body
 
   const isCourseExisted = await Course.findByPk(courseId)
-  if (!isCourseExisted) return next(new Error('No course with this id'))
+  if (!isCourseExisted)
+    return next(new Error('No course with this id', { cause: 404 }))
 
   if (!isCourseExisted.isActive)
     return next(
@@ -39,18 +40,25 @@ export const createTeachersCourses = async (req, res, next) => {
     )
 
   const isTeacherExisted = await Employee.findByPk(teacherId)
-  if (!isTeacherExisted) return next(new Error('No Employee with this id'))
+  if (!isTeacherExisted)
+    return next(new Error('No Employee with this id', { cause: 404 }))
   if (isTeacherExisted.employeeType !== 'teacher')
-    return next(new Error('This employee is not teacher'))
+    return next(new Error('This employee is not teacher', { cause: 409 }))
 
   const isTeacherCourseExisted = await TeachersCourses.findOne({
     where: { tblEmployeeId: teacherId, tblCourseId: courseId },
   })
   if (isTeacherCourseExisted)
-    return next(new Error('Teacher and Course record is already existed'))
+    return next(
+      new Error('Teacher and Course record is already existed', { cause: 409 })
+    )
 
   if (isTeacherExisted.specialization !== isCourseExisted.specialization)
-    return next(new Error("Teacher and Course haven't same specialization"))
+    return next(
+      new Error("Teacher and Course haven't same specialization", {
+        cause: 409,
+      })
+    )
 
   const newTeacherCourse = await TeachersCourses.create({
     tblEmployeeId: teacherId,
@@ -88,23 +96,29 @@ export const updateTeachersCourses = async (req, res, next) => {
 
   if (teacherId) {
     const isEmployeeExisted = await Employee.findByPk(teacherId)
-    if (!isEmployeeExisted) return next(new Error('No Employee with this id'))
+    if (!isEmployeeExisted)
+      return next(new Error('No Employee with this id', { cause: 404 }))
 
     if (isEmployeeExisted.employeeType !== 'teacher')
-      return next(new Error('This employee is not teacher'))
+      return next(new Error('This employee is not teacher', { cause: 409 }))
 
     if (
       isEmployeeExisted.specialization !==
       isTeacherCourseExisted.tbl_employee.specialization
     )
-      return next(new Error("This Teacher hasn't got the same specialization"))
+      return next(
+        new Error("This Teacher hasn't got the same specialization", {
+          cause: 409,
+        })
+      )
 
     isTeacherCourseExisted.tblEmployeeId = teacherId
   }
 
   if (courseId) {
     const isCourseExisted = await Course.findByPk(courseId)
-    if (!isCourseExisted) return next(new Error('No course with this id'))
+    if (!isCourseExisted)
+      return next(new Error('No course with this id', { cause: 404 }))
 
     if (!isCourseExisted.isActive)
       return next(
@@ -117,7 +131,11 @@ export const updateTeachersCourses = async (req, res, next) => {
       isCourseExisted.specialization !==
       isTeacherCourseExisted.tbl_course.specialization
     )
-      return next(new Error("This Course hasn't got the same specialization"))
+      return next(
+        new Error("This Course hasn't got the same specialization", {
+          cause: 409,
+        })
+      )
 
     isTeacherCourseExisted.tblCourseId = courseId
   }
@@ -166,12 +184,12 @@ export const restoreTeachersCourses = async (req, res, next) => {
     }
   )
   if (!isTeacherCourseExisted)
-    return next(new Error('No Teacher-Course with this id'))
+    return next(new Error('No Teacher-Course with this id', { cause: 404 }))
 
   const restoredTeacherCourse = await isTeacherCourseExisted.restore()
 
   if (!restoredTeacherCourse)
-    return next(new Error('error while restoring Teacher-Course'))
+    return next(new Error('Error while restoring Teacher-Course'))
 
   res.status(200).json({
     message: 'Teacher-Course has been restored successfully',

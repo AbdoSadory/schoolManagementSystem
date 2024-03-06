@@ -106,7 +106,8 @@ export const updateStudentsCourses = async (req, res, next) => {
 
   if (courseId) {
     const isCourseExisted = await Course.findByPk(courseId)
-    if (!isCourseExisted) return next(new Error('No course with this id'))
+    if (!isCourseExisted)
+      return next(new Error('No course with this id', { cause: 404 }))
 
     if (!isCourseExisted.isActive)
       return next(
@@ -170,12 +171,12 @@ export const restoreStudentsCourses = async (req, res, next) => {
     }
   )
   if (!isStudentCourseExisted)
-    return next(new Error('No Student-Course with this id'))
+    return next(new Error('No Student-Course with this id', { cause: 404 }))
 
   const restoredStudentCourse = await isStudentCourseExisted.restore()
 
   if (!restoredStudentCourse)
-    return next(new Error('error while restoring Student-Course'))
+    return next(new Error('Error while restoring Student-Course'))
 
   res.status(200).json({
     message: 'Student-Course has been restored successfully',

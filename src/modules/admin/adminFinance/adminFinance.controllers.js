@@ -163,11 +163,12 @@ export const restoreFinance = async (req, res, next) => {
   const isFinanceExisted = await Finance.findByPk(financeId, {
     paranoid: false,
   })
-  if (!isFinanceExisted) return next(new Error('No Finance with this id'))
+  if (!isFinanceExisted)
+    return next(new Error('No Finance with this id', { cause: 404 }))
 
   const restoredFinance = await isFinanceExisted.restore()
 
-  if (!restoredFinance) return next(new Error('error while restoring finance'))
+  if (!restoredFinance) return next(new Error('Error while restoring finance'))
 
   res.status(200).json({
     message: 'Finance has been restored successfully',

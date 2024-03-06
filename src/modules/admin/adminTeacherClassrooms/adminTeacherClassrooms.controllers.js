@@ -33,21 +33,27 @@ export const createTeachersClassroom = async (req, res, next) => {
   const isClassroomExisted = await ClassRoom.findByPk(classroomId, {
     include: { model: Course },
   })
-  if (!isClassroomExisted) return next(new Error('No classroom with this id'))
+  if (!isClassroomExisted)
+    return next(new Error('No classroom with this id', { cause: 404 }))
   if (!isClassroomExisted.isActive)
-    return next(new Error("this classroom isn't active"))
+    return next(new Error("this classroom isn't active", { cause: 409 }))
 
   const isTeacherExisted = await Employee.findByPk(teacherId)
-  if (!isTeacherExisted) return next(new Error('No Employee with this id'))
+  if (!isTeacherExisted)
+    return next(new Error('No Employee with this id', { cause: 404 }))
 
   if (isTeacherExisted.employeeType !== 'teacher')
-    return next(new Error('This employee is not teacher'))
+    return next(new Error('This employee is not teacher', { cause: 409 }))
 
   const isTeacherClassroomExisted = await TeachersClassRooms.findOne({
     where: { tblEmployeeId: teacherId, tblClassRoomId: classroomId },
   })
   if (isTeacherClassroomExisted)
-    return next(new Error('Teacher and Classroom record is already existed'))
+    return next(
+      new Error('Teacher and Classroom record is already existed', {
+        cause: 409,
+      })
+    )
 
   if (
     isTeacherExisted.specialization !==
@@ -55,7 +61,8 @@ export const createTeachersClassroom = async (req, res, next) => {
   )
     return next(
       new Error(
-        "Teacher and Classroom's course, haven't got the same specialization"
+        "Teacher and Classroom's course, haven't got the same specialization",
+        { cause: 409 }
       )
     )
 
@@ -110,10 +117,11 @@ export const updateTeachersClassroom = async (req, res, next) => {
 
   if (teacherId) {
     const isEmployeeExisted = await Employee.findByPk(teacherId)
-    if (!isEmployeeExisted) return next(new Error('No Employee with this id'))
+    if (!isEmployeeExisted)
+      return next(new Error('No Employee with this id', { cause: 404 }))
 
     if (isEmployeeExisted.employeeType !== 'teacher')
-      return next(new Error('This employee is not teacher'))
+      return next(new Error('This employee is not teacher', { cause: 404 }))
 
     if (
       isEmployeeExisted.specialization !==
@@ -121,7 +129,8 @@ export const updateTeachersClassroom = async (req, res, next) => {
     )
       return next(
         new Error(
-          "This Teacher hasn't got the same specialization of the previous teacher"
+          "This Teacher hasn't got the same specialization of the previous teacher",
+          { cause: 409 }
         )
       )
 
@@ -130,16 +139,18 @@ export const updateTeachersClassroom = async (req, res, next) => {
 
   if (classroomId) {
     const isClassroomExisted = await ClassRoom.findByPk(classroomId)
-    if (!isClassroomExisted) return next(new Error('No classroom with this id'))
+    if (!isClassroomExisted)
+      return next(new Error('No classroom with this id', { cause: 409 }))
     if (!isClassroomExisted.isActive)
-      return next(new Error("this classroom isn't active"))
+      return next(new Error("this classroom isn't active", { cause: 409 }))
     if (
       isClassroomExisted.specialization !==
       isTeacherClassroomExisted.tbl_classRoom.specialization
     )
       return next(
         new Error(
-          "This Course hasn't got the same specialization of the previous course"
+          "This Course hasn't got the same specialization of the previous course",
+          { cause: 409 }
         )
       )
 
@@ -181,11 +192,11 @@ export const restoreTeachersClassrooms = async (req, res, next) => {
     }
   )
   if (!isTeachersClassroomExisted)
-    return next(new Error('No Teachers-Classroom with this id'))
+    return next(new Error('No Teachers-Classroom with this id', { cause: 404 }))
 
   const restoredTeacherClassroom = await isTeachersClassroomExisted.restore()
   if (!restoredTeacherClassroom)
-    return next(new Error('error while restoring Teachers-Classroom'))
+    return next(new Error('Error while restoring Teachers-Classroom'))
 
   res.status(200).json({
     message: 'Teacher-Classroom has been restored successfully',
