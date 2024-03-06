@@ -25,6 +25,13 @@ adminFinance.put(
   ),
   expressAsyncHandler(adminFinanceControllers.updateFinance)
 )
+adminFinance.put(
+  '/restoreFinanceData/:financeId',
+  dataValidationHandler(
+    adminFinanceDataValidationSchemas.adminFinanceRestoreFinance
+  ),
+  expressAsyncHandler(adminFinanceControllers.restoreFinance)
+)
 
 adminFinance.delete(
   '/deleteFinanceData/:financeYear',

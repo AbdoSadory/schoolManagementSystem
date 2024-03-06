@@ -12,11 +12,19 @@ adminCourseResults.get(
 )
 
 adminCourseResults.post(
-  '/',
+  '/addCourseResult',
   dataValidationHandler(
     adminCourseResultsSchemas.adminCourseResultCreateCourseResultSchema
   ),
   expressAsyncHandler(adminCourseResultsControllers.createCourseResult)
+)
+
+adminCourseResults.put(
+  '/restoreCourseResult/:courseResultId',
+  dataValidationHandler(
+    adminCourseResultsSchemas.adminCourseResultRestoreCourseResultSchema
+  ),
+  expressAsyncHandler(adminCourseResultsControllers.restoreCourseResult)
 )
 
 adminCourseResults

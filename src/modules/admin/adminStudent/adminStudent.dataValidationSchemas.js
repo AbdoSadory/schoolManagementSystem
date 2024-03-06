@@ -93,3 +93,13 @@ export const adminStudentDeleteStudent = {
     studentEmail: Joi.string().email().trim().required(),
   }),
 }
+export const adminStudentRestoreStudentSchema = {
+  params: Joi.object({
+    studentId: Joi.string()
+      .guid({ version: ['uuidv4'], separator: '-' })
+      .required()
+      .messages({
+        '*': 'Id must be uuidv4 with separator',
+      }),
+  }),
+}

@@ -6,16 +6,7 @@ import dataValidationHandler from '../../middlewares/dataValidationHandler.js'
 import { authenticationHandler } from '../../middlewares/authenticationHandler.js'
 import Admin from '../../../DB/models/admin.model.js'
 import authorizationHandler from '../../middlewares/authorizationHandler.js'
-import adminEmployee from './adminEmployee/adminEmployee.routes.js'
-import adminStudent from './adminStudent/adminStudent.routes.js'
-import adminCourse from './adminCourse/adminCourse.routes.js'
-import adminFinance from './adminFinance/adminFinance.routes.js'
-import adminClassroom from './adminClassroom/adminClassroom.routes.js'
-import adminCourseResults from './adminCourseResults/adminCourseResults.routes.js'
-import adminTeacherCourses from './adminTeacherCourses/adminTeacherCourses.routes.js'
-import adminTeacherClassrooms from './adminTeacherClassrooms/adminTeacherClassrooms.routes.js'
-import adminStudentCourses from './adminStudentCourses/adminStudentCourses.routes.js'
-import adminStudentClassrooms from './adminStudentClassrooms/adminStudentClassrooms.routes.js'
+import * as adminNestedRoutes from './admin-nested-routes.js'
 
 const adminRouter = Router()
 
@@ -30,14 +21,14 @@ adminRouter.post(
   dataValidationHandler(adminDataValidationSchemas.adminSignUpSchema),
   expressAsyncHandler(adminControllers.signUp)
 )
-adminRouter.use('/employee', adminEmployee)
-adminRouter.use('/student', adminStudent)
-adminRouter.use('/course', adminCourse)
-adminRouter.use('/finance', adminFinance)
-adminRouter.use('/classroom', adminClassroom)
-adminRouter.use('/courseResults', adminCourseResults)
-adminRouter.use('/teacherCourses', adminTeacherCourses)
-adminRouter.use('/teacherClassrooms', adminTeacherClassrooms)
-adminRouter.use('/studentCourses', adminStudentCourses)
-adminRouter.use('/studentClassrooms', adminStudentClassrooms)
+adminRouter.use('/employee', adminNestedRoutes.adminEmployee)
+adminRouter.use('/student', adminNestedRoutes.adminStudent)
+adminRouter.use('/course', adminNestedRoutes.adminCourse)
+adminRouter.use('/finance', adminNestedRoutes.adminFinance)
+adminRouter.use('/classroom', adminNestedRoutes.adminClassroom)
+adminRouter.use('/courseResults', adminNestedRoutes.adminCourseResults)
+adminRouter.use('/teacherCourses', adminNestedRoutes.adminTeacherCourses)
+adminRouter.use('/teacherClassrooms', adminNestedRoutes.adminTeacherClassrooms)
+adminRouter.use('/studentCourses', adminNestedRoutes.adminStudentCourses)
+adminRouter.use('/studentClassrooms', adminNestedRoutes.adminStudentClassrooms)
 export default adminRouter

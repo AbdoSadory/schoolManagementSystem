@@ -274,22 +274,37 @@ export const deleteStudent = async (req, res, next) => {
       })
     )
   }
-  const deletedStudent = await Student.destroy({
-    where: { email: studentEmail },
-    force: true,
-  })
+  const deletedStudent = await isStudentExisted.destroy()
   if (!deletedStudent) {
     return next(new Error('Error While deleting Student'))
   }
-  await cloudinaryConnection()
-    .api.delete_resources_by_prefix(
-      `schoolManagementSystem/assets/students/grade-${isStudentExisted.grade}/${isStudentExisted.id}`
-    )
-    .then((result) =>
-      cloudinaryConnection().api.delete_folder(
-        `schoolManagementSystem/assets/students/grade-${isStudentExisted.grade}/${isStudentExisted.id}`
-      )
-    )
-    .catch((err) => next(new Error('Error While Deleting Media folders')))
+  // * For hard-deletion
+  // await cloudinaryConnection()
+  //   .api.delete_resources_by_prefix(
+  //     `schoolManagementSystem/assets/students/grade-${isStudentExisted.grade}/${isStudentExisted.id}`
+  //   )
+  //   .then((result) =>
+  //     cloudinaryConnection().api.delete_folder(
+  //       `schoolManagementSystem/assets/students/grade-${isStudentExisted.grade}/${isStudentExisted.id}`
+  //     )
+  //   )
+  //   .catch((err) => next(new Error('Error While Deleting Media folders')))
   res.status(204).json({ message: 'Deleted Student', deletedStudent })
+}
+
+export const restoreStudent = async (req, res, next) => {
+  const { courseId } = req.params
+  const isStudentExisted = await Student.findByPk(courseId, {
+    paranoid: false,
+  })
+  if (!isStudentExisted) return next(new Error('No Student with this id'))
+
+  const restoredStudent = await isStudentExisted.restore()
+
+  if (!restoredStudent) return next(new Error('error while restoring Student'))
+
+  res.status(200).json({
+    message: 'Student has been restored successfully',
+    restoredStudent,
+  })
 }

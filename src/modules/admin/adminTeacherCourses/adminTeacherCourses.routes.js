@@ -22,6 +22,14 @@ adminTeacherCourses.post(
   expressAsyncHandler(adminTeachersCoursesControllers.createTeachersCourses)
 )
 
+adminTeacherCourses.put(
+  '/restoreTeacherCourse/:teacherCourseId',
+  dataValidationHandler(
+    adminTeachersCoursesDataValidationSchemas.adminTeachersCoursesRestoreSchema
+  ),
+  expressAsyncHandler(adminTeachersCoursesControllers.restoreTeachersCourses)
+)
+
 adminTeacherCourses
   .route('/:teacherCourseId')
   .put(

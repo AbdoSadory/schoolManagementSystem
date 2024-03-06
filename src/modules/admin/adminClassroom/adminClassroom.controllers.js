@@ -58,6 +58,24 @@ export const createClassroom = async (req, res, next) => {
       )
     )
   }
+  // check if the course learningMode level doesn't equal the classroom learningMode
+  if (isCourseExisted.learningMode !== learningMode) {
+    return next(
+      new Error(
+        'Course learningMode is not the same like your entered classroom learningMode'
+      )
+    )
+  }
+
+  // check if the course is active
+  if (!isCourseExisted.isActive) {
+    return next(
+      new Error(
+        "Course is not active, you can't add classroom to inactive course"
+      ),
+      { cause: 409 }
+    )
+  }
   const newClassroom = await ClassRoom.create(
     {
       term,
@@ -73,6 +91,31 @@ export const createClassroom = async (req, res, next) => {
   if (!newClassroom) return next(new Error('Error While creating classroom'))
   res.status(201).json({ message: 'New Classroom', classroom: newClassroom })
 }
+// ========================== change classroom State ===================//
+export const changeClassroomState = async (req, res, next) => {
+  const { isActive } = req.body
+  const { classroomId } = req.params
+
+  const isClassroomExisted = await ClassRoom.findOne({
+    where: { id: classroomId },
+  })
+  if (!isClassroomExisted) {
+    return next(
+      new Error('This classroom is not existed', {
+        cause: 404,
+      })
+    )
+  }
+
+  isClassroomExisted.isActive = isActive
+
+  const updatedClassroom = await isClassroomExisted.save()
+  if (!updatedClassroom) {
+    return next(new Error('Error while changing The classroom state'))
+  }
+  res.status(200).json({ message: 'Change Classroom State', updatedClassroom })
+}
+
 export const updateClassroom = async (req, res, next) => {
   const { classroomId } = req.params
   const { term, grade, year, learningMode, courseId } = req.body
@@ -98,6 +141,27 @@ export const updateClassroom = async (req, res, next) => {
         )
       )
     }
+    // check if the course learningMode level doesn't equal the classroom learningMode
+    if (
+      isCourseExisted.learningMode !== learningMode ||
+      isCourseExisted.learningMode !== isClassroomExisted.learningMode
+    ) {
+      return next(
+        new Error(
+          'Course learningMode is not the same like your entered or old classroom learningMode'
+        )
+      )
+    }
+
+    // check if the course is active
+    if (!isCourseExisted.isActive) {
+      return next(
+        new Error(
+          "Course is not active, you can't add classroom to inactive course"
+        ),
+        { cause: 409 }
+      )
+    }
     isClassroomExisted.tblCourseId = courseId
   }
 
@@ -115,9 +179,24 @@ export const deleteClassroom = async (req, res, next) => {
   })
   if (!isClassroomExisted) return next(new Error('No Classroom with this id'))
 
-  await isClassroomExisted.destroy({
-    force: true,
-  })
+  await isClassroomExisted.destroy()
 
   res.status(200).json({ message: 'Classroom has been deleted successfully' })
+}
+
+export const restoreClassroom = async (req, res, next) => {
+  const { classroomId } = req.params
+  const isClassroomExisted = await ClassRoom.findByPk(classroomId, {
+    paranoid: false,
+  })
+  if (!isClassroomExisted) return next(new Error('No Classroom with this id'))
+
+  const restoredClassroom = await isClassroomExisted.restore()
+
+  if (!restoredClassroom)
+    return next(new Error('error while restoring classroom'))
+  res.status(200).json({
+    message: 'Classroom has been restored successfully',
+    restoredClassroom,
+  })
 }

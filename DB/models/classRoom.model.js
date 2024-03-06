@@ -37,6 +37,18 @@ const ClassRoom = sql_config.define(
       required: true,
       allowNull: false,
     },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      required: true,
+      allowNull: false,
+      defaultValue: true,
+    },
+    numberOfStudents: {
+      type: DataTypes.INTEGER,
+      required: true,
+      allowNull: false,
+      defaultValue: 15,
+    },
   },
   { timestamps: true, paranoid: true }
 )

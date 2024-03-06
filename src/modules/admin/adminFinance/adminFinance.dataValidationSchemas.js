@@ -50,3 +50,9 @@ export const adminFinanceDeleteFinance = {
     financeYear: Joi.number().positive().min(2000).max(2030).required(),
   }),
 }
+
+export const adminFinanceRestoreFinance = {
+  params: Joi.object({
+    financeId: Joi.number().min(1).required(),
+  }),
+}

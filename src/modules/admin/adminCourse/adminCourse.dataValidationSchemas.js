@@ -52,6 +52,21 @@ export const adminCourseCreateCourse = {
       .trim()
       .valid(...learningModeEnum)
       .required(),
+    isActive: Joi.boolean().required(),
+  }),
+}
+
+export const adminCourseChangeCourseState = {
+  params: Joi.object({
+    courseId: Joi.number().min(1).required(),
+  }),
+  body: Joi.object({
+    isActive: Joi.boolean().valid(true, false).required(),
+  }),
+}
+export const adminCourseRestoreCourseSchema = {
+  params: Joi.object({
+    courseId: Joi.number().min(1).required(),
   }),
 }
 
@@ -97,5 +112,12 @@ export const adminCourseUpdateCourse = {
     grade: Joi.string()
       .trim()
       .valid(...gradeEnum),
+    isActive: Joi.boolean(),
   }).with('title', 'specialization'),
+}
+
+export const adminCourseDeleteCourse = {
+  params: Joi.object({
+    courseId: Joi.number().min(1).required(),
+  }),
 }

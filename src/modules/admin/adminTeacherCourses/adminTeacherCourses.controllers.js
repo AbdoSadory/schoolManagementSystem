@@ -33,6 +33,11 @@ export const createTeachersCourses = async (req, res, next) => {
   const isCourseExisted = await Course.findByPk(courseId)
   if (!isCourseExisted) return next(new Error('No course with this id'))
 
+  if (!isCourseExisted.isActive)
+    return next(
+      new Error("can't add teacher-course for inactive course", { cause: 409 })
+    )
+
   const isTeacherExisted = await Employee.findByPk(teacherId)
   if (!isTeacherExisted) return next(new Error('No Employee with this id'))
   if (isTeacherExisted.employeeType !== 'teacher')
@@ -81,18 +86,6 @@ export const updateTeachersCourses = async (req, res, next) => {
   if (!isTeacherCourseExisted)
     return next(new Error('No teacher-course with this id'), { cause: 404 })
 
-  const isUpdatedTeacherCourseExisted = await TeachersCourses.findOne({
-    where: {
-      id: { [Op.ne]: teacherCourseId },
-      tblEmployeeId: teacherId || isTeacherCourseExisted.tblEmployeeId,
-      tblCourseId: courseId || isTeacherCourseExisted.tblCourseId,
-    },
-  })
-
-  if (isUpdatedTeacherCourseExisted)
-    return next(
-      new Error("There's already teacher-course existed", { cause: 409 })
-    )
   if (teacherId) {
     const isEmployeeExisted = await Employee.findByPk(teacherId)
     if (!isEmployeeExisted) return next(new Error('No Employee with this id'))
@@ -113,6 +106,13 @@ export const updateTeachersCourses = async (req, res, next) => {
     const isCourseExisted = await Course.findByPk(courseId)
     if (!isCourseExisted) return next(new Error('No course with this id'))
 
+    if (!isCourseExisted.isActive)
+      return next(
+        new Error("can't add teacher-course for inactive course", {
+          cause: 409,
+        })
+      )
+
     if (
       isCourseExisted.specialization !==
       isTeacherCourseExisted.tbl_course.specialization
@@ -121,6 +121,18 @@ export const updateTeachersCourses = async (req, res, next) => {
 
     isTeacherCourseExisted.tblCourseId = courseId
   }
+  const isUpdatedTeacherCourseExisted = await TeachersCourses.findOne({
+    where: {
+      id: { [Op.ne]: teacherCourseId },
+      tblEmployeeId: isTeacherCourseExisted.tblEmployeeId,
+      tblCourseId: isTeacherCourseExisted.tblCourseId,
+    },
+  })
+
+  if (isUpdatedTeacherCourseExisted)
+    return next(
+      new Error("There's already teacher-course existed", { cause: 409 })
+    )
 
   const updatedTeacherCourse = await isTeacherCourseExisted.save()
 
@@ -137,14 +149,32 @@ export const deleteTeachersCourses = async (req, res, next) => {
   if (!isTeacherCourseExisted)
     return next(new Error('No teacher-course with this id'), { cause: 404 })
 
-  const deletedTeacherCourse = await TeachersCourses.destroy({
-    where: { id: teacherCourseId },
-    force: true,
-  })
+  const deletedTeacherCourse = await isTeacherCourseExisted.destroy()
   if (!deletedTeacherCourse) {
     return next(new Error('Error While deleting teacher-course'))
   }
   res.status(200).json({
     message: 'Teacher-Course has been deleted successfully',
+  })
+}
+export const restoreTeachersCourses = async (req, res, next) => {
+  const { teacherCourseId } = req.params
+  const isTeacherCourseExisted = await TeachersCourses.findByPk(
+    teacherCourseId,
+    {
+      paranoid: false,
+    }
+  )
+  if (!isTeacherCourseExisted)
+    return next(new Error('No Teacher-Course with this id'))
+
+  const restoredTeacherCourse = await isTeacherCourseExisted.restore()
+
+  if (!restoredTeacherCourse)
+    return next(new Error('error while restoring Teacher-Course'))
+
+  res.status(200).json({
+    message: 'Teacher-Course has been restored successfully',
+    restoredCourse,
   })
 }

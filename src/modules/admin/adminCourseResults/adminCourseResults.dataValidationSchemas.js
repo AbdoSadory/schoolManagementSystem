@@ -27,7 +27,7 @@ export const adminCourseResultCreateCourseResultSchema = {
 
 export const adminCourseResultGetCourseResultByIdSchema = {
   params: Joi.object({
-    courseResultId: Joi.number(),
+    courseResultId: Joi.number().min(1),
   }),
 }
 export const adminCourseResultGetCourseResultByCourseIdSchema = {
@@ -42,6 +42,12 @@ export const adminCourseResultGetCourseResultByStudentIdSchema = {
       .messages({
         '*': 'Id must be uuidv4 with separator',
       }),
+  }),
+}
+
+export const adminCourseResultRestoreCourseResultSchema = {
+  params: Joi.object({
+    courseResultId: Joi.number().min(1),
   }),
 }
 

@@ -35,8 +35,10 @@ export const createStudentsClassroom = async (req, res, next) => {
   const isClassroomExisted = await ClassRoom.findByPk(classroomId, {
     include: { model: Course },
   })
-  console.log(isClassroomExisted)
+
   if (!isClassroomExisted) return next(new Error('No classroom with this id'))
+  if (!isClassroomExisted.isActive)
+    return next(new Error("this classroom isn't active"))
 
   //  check if the Student is existed
   const isStudentExisted = await Student.findByPk(studentId)
@@ -130,6 +132,8 @@ export const updateStudentsClassroom = async (req, res, next) => {
       include: { model: Course },
     })
     if (!isClassroomExisted) return next(new Error('No classroom with this id'))
+    if (!isClassroomExisted.isActive)
+      return next(new Error("this classroom isn't active"))
 
     const isStudentEnrolledToTheCourse = await StudentsCourses.findOne({
       where: {
@@ -167,7 +171,7 @@ export const updateStudentsClassroom = async (req, res, next) => {
   })
 }
 
-export const deleteStudentsCourses = async (req, res, next) => {
+export const deleteStudentsClassroom = async (req, res, next) => {
   const { studentClassroomId } = req.params
 
   const isStudentClassroomExisted = await StudentsClassRooms.findByPk(
@@ -176,13 +180,33 @@ export const deleteStudentsCourses = async (req, res, next) => {
   if (!isStudentClassroomExisted)
     return next(new Error('No Student-Classroom with this id'), { cause: 404 })
 
-  const deletedStudentClassroom = await StudentsClassRooms.destroy({
-    where: { id: studentClassroomId },
-  })
+  const deletedStudentClassroom = await isStudentClassroomExisted.destroy()
   if (!deletedStudentClassroom) {
     return next(new Error('Error While deleting student-classroom'))
   }
   res.status(200).json({
     message: 'Student-Classroom has been deleted successfully',
+  })
+}
+
+export const restoreStudentsClassroom = async (req, res, next) => {
+  const { studentClassroomId } = req.params
+  const isStudentsClassroomExisted = await StudentsClassRooms.findByPk(
+    studentClassroomId,
+    {
+      paranoid: false,
+    }
+  )
+  if (!isStudentsClassroomExisted)
+    return next(new Error('No StudentsClassroom with this id'))
+
+  const restoredStudentsClassroom = await isStudentsClassroomExisted.restore()
+
+  if (!restoredStudentsClassroom)
+    return next(new Error('error while restoring StudentsClassroom'))
+
+  res.status(200).json({
+    message: 'Students-Classroom has been restored successfully',
+    restoredStudentsClassroom,
   })
 }

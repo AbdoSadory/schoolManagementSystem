@@ -33,6 +33,15 @@ adminEmployee.put(
   ),
   expressAsyncHandler(adminEmployeeControllers.updateEmployee)
 )
+
+adminEmployee.put(
+  '/restoreEmployee/:employeeId',
+  dataValidationHandler(
+    adminEmployeeDataValidationSchemas.adminEmployeeRestoreEmployeeSchema
+  ),
+  expressAsyncHandler(adminEmployeeControllers.restoreEmployee)
+)
+
 adminEmployee.delete(
   '/deleteEmployee',
   dataValidationHandler(

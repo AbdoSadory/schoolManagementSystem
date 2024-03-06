@@ -84,3 +84,14 @@ export const adminEmployeeDeleteEmployee = {
     employeeEmail: Joi.string().email().trim().required(),
   }),
 }
+
+export const adminEmployeeRestoreEmployeeSchema = {
+  params: Joi.object({
+    employeeId: Joi.string()
+      .guid({ version: ['uuidv4'], separator: '-' })
+      .required()
+      .messages({
+        '*': 'Id must be uuidv4 with separator',
+      }),
+  }),
+}

@@ -16,15 +16,34 @@ adminCourse.post(
 )
 
 adminCourse.put(
-  '/updateCourse/:courseId',
+  '/changeCourseState/:courseId',
   dataValidationHandler(
-    adminCourseDataValidationSchemas.adminCourseUpdateCourse
+    adminCourseDataValidationSchemas.adminCourseRestoreCourseSchema
   ),
-  expressAsyncHandler(adminCourseControllers.updateCourse)
+  expressAsyncHandler(adminCourseControllers.changeCourseState)
 )
 
-adminCourse.delete(
-  '/deleteCourse/:courseId',
-  expressAsyncHandler(adminCourseControllers.deleteCourse)
+adminCourse.put(
+  '/restoreCourse/:courseId',
+  dataValidationHandler(
+    adminCourseDataValidationSchemas.adminCourseRestoreCourseSchema
+  ),
+  expressAsyncHandler(adminCourseControllers.restoreCourse)
 )
+
+adminCourse
+  .route('/:courseId')
+  .put(
+    dataValidationHandler(
+      adminCourseDataValidationSchemas.adminCourseUpdateCourse
+    ),
+    expressAsyncHandler(adminCourseControllers.updateCourse)
+  )
+  .delete(
+    dataValidationHandler(
+      adminCourseDataValidationSchemas.adminCourseDeleteCourse
+    ),
+    expressAsyncHandler(adminCourseControllers.deleteCourse)
+  )
+
 export default adminCourse

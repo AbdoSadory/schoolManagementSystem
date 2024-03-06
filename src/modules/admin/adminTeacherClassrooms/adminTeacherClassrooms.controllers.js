@@ -34,6 +34,8 @@ export const createTeachersClassroom = async (req, res, next) => {
     include: { model: Course },
   })
   if (!isClassroomExisted) return next(new Error('No classroom with this id'))
+  if (!isClassroomExisted.isActive)
+    return next(new Error("this classroom isn't active"))
 
   const isTeacherExisted = await Employee.findByPk(teacherId)
   if (!isTeacherExisted) return next(new Error('No Employee with this id'))
@@ -129,7 +131,8 @@ export const updateTeachersClassroom = async (req, res, next) => {
   if (classroomId) {
     const isClassroomExisted = await ClassRoom.findByPk(classroomId)
     if (!isClassroomExisted) return next(new Error('No classroom with this id'))
-
+    if (!isClassroomExisted.isActive)
+      return next(new Error("this classroom isn't active"))
     if (
       isClassroomExisted.specialization !==
       isTeacherClassroomExisted.tbl_classRoom.specialization
@@ -151,7 +154,7 @@ export const updateTeachersClassroom = async (req, res, next) => {
   })
 }
 
-export const deleteTeachersCourses = async (req, res, next) => {
+export const deleteTeachersClassrooms = async (req, res, next) => {
   const { teacherClassroomId } = req.params
 
   const isTeacherClassroomExisted = await TeachersClassRooms.findByPk(
@@ -160,14 +163,32 @@ export const deleteTeachersCourses = async (req, res, next) => {
   if (!isTeacherClassroomExisted)
     return next(new Error('No teacher-Classroom with this id'), { cause: 404 })
 
-  const deletedTeacherClassroom = await TeachersClassRooms.destroy({
-    where: { id: teacherClassroomId },
-    force: true,
-  })
+  const deletedTeacherClassroom = await isTeacherClassroomExisted.destroy()
   if (!deletedTeacherClassroom) {
     return next(new Error('Error While deleting teacher-classroom'))
   }
   res.status(200).json({
     message: 'Teacher-Classroom has been deleted successfully',
+  })
+}
+
+export const restoreTeachersClassrooms = async (req, res, next) => {
+  const { teacherClassroomId } = req.params
+  const isTeachersClassroomExisted = await TeachersClassRooms.findByPk(
+    teacherClassroomId,
+    {
+      paranoid: false,
+    }
+  )
+  if (!isTeachersClassroomExisted)
+    return next(new Error('No Teachers-Classroom with this id'))
+
+  const restoredTeacherClassroom = await isTeachersClassroomExisted.restore()
+  if (!restoredTeacherClassroom)
+    return next(new Error('error while restoring Teachers-Classroom'))
+
+  res.status(200).json({
+    message: 'Teacher-Classroom has been restored successfully',
+    restoredTeacherClassroom,
   })
 }

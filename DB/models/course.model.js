@@ -43,6 +43,12 @@ const Course = sql_config.define(
       required: true,
       allowNull: false,
     },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      required: true,
+      allowNull: false,
+      defaultValue: true,
+    },
   },
   { timestamps: true, paranoid: true }
 )

@@ -151,13 +151,26 @@ export const deleteFinance = async (req, res, next) => {
       })
     )
   }
-  const deletedFinance = await Finance.destroy({
-    where: { year: financeYear },
-    force: true,
-  })
+  const deletedFinance = await isFinanceYearExisted.destroy()
   if (!deletedFinance) {
     return next(new Error('Error While deleting Finance Year'))
   }
 
   res.status(204).json({ message: 'Deleted Finance Year Data', deletedFinance })
+}
+export const restoreFinance = async (req, res, next) => {
+  const { financeId } = req.params
+  const isFinanceExisted = await Finance.findByPk(financeId, {
+    paranoid: false,
+  })
+  if (!isFinanceExisted) return next(new Error('No Finance with this id'))
+
+  const restoredFinance = await isFinanceExisted.restore()
+
+  if (!restoredFinance) return next(new Error('error while restoring finance'))
+
+  res.status(200).json({
+    message: 'Finance has been restored successfully',
+    restoredFinance,
+  })
 }

@@ -248,20 +248,39 @@ export const deleteEmployee = async (req, res, next) => {
       })
     )
   }
-  const deletedEmployee = await isEmployeeExisted.destroy({ force: true })
+  const deletedEmployee = await isEmployeeExisted.destroy()
 
   if (!deletedEmployee) {
     return next(new Error('Error While deleting Employee'))
   }
-  await cloudinaryConnection()
-    .api.delete_resources_by_prefix(
-      `schoolManagementSystem/assets/employee/${isEmployeeExisted.employeeType}/${isEmployeeExisted.id}`
-    )
-    .then((result) =>
-      cloudinaryConnection().api.delete_folder(
-        `schoolManagementSystem/assets/employee/${isEmployeeExisted.employeeType}/${isEmployeeExisted.id}`
-      )
-    )
-    .catch((err) => next(new Error('Error While Deleting Media folders')))
-  res.status(204).json({ message: 'Deleted Employee' })
+  // * For Hard-deletion
+  // await cloudinaryConnection()
+  //   .api.delete_resources_by_prefix(
+  //     `schoolManagementSystem/assets/employee/${isEmployeeExisted.employeeType}/${isEmployeeExisted.id}`
+  //   )
+  //   .then((result) =>
+  //     cloudinaryConnection().api.delete_folder(
+  //       `schoolManagementSystem/assets/employee/${isEmployeeExisted.employeeType}/${isEmployeeExisted.id}`
+  //     )
+  //   )
+  //   .catch((err) => next(new Error('Error While Deleting Media folders')))
+  res.status(200).json({ message: 'Employee has been deleted successfully' })
+}
+
+export const restoreEmployee = async (req, res, next) => {
+  const { employeeId } = req.params
+  const isEmployeeExisted = await Employee.findByPk(employeeId, {
+    paranoid: false,
+  })
+  if (!isEmployeeExisted) return next(new Error('No Employee with this id'))
+
+  const restoredEmployee = await isEmployeeExisted.restore()
+
+  if (!restoredEmployee)
+    return next(new Error('error while restoring employee'))
+
+  res.status(200).json({
+    message: 'Employee has been restored successfully',
+    restoredEmployee,
+  })
 }

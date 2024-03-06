@@ -33,6 +33,11 @@ export const createStudentsCourses = async (req, res, next) => {
   if (!isCourseExisted)
     return next(new Error('No course with this id', { cause: 404 }))
 
+  if (!isCourseExisted.isActive)
+    return next(
+      new Error("can't add student-course for inactive course", { cause: 409 })
+    )
+
   const isStudentExisted = await Student.findByPk(studentId)
   if (!isStudentExisted)
     return next(new Error('No Student with this id', { cause: 404 }))
@@ -84,18 +89,6 @@ export const updateStudentsCourses = async (req, res, next) => {
   if (!isStudentCourseExisted)
     return next(new Error('No student-course with this id'), { cause: 404 })
 
-  const isUpdatedStudentCourseExisted = await StudentsCourses.findOne({
-    where: {
-      id: { [Op.ne]: studentCourseId },
-      tblStudentId: studentId || isStudentCourseExisted.tblStudentId,
-      tblCourseId: courseId || isStudentCourseExisted.tblCourseId,
-    },
-  })
-
-  if (isUpdatedStudentCourseExisted)
-    return next(
-      new Error("There's already student-course existed", { cause: 409 })
-    )
   if (studentId) {
     const isStudentExisted = await Student.findByPk(studentId)
     if (!isStudentExisted)
@@ -115,6 +108,12 @@ export const updateStudentsCourses = async (req, res, next) => {
     const isCourseExisted = await Course.findByPk(courseId)
     if (!isCourseExisted) return next(new Error('No course with this id'))
 
+    if (!isCourseExisted.isActive)
+      return next(
+        new Error("can't add student-course for inactive course", {
+          cause: 409,
+        })
+      )
     if (isCourseExisted.grade !== isStudentCourseExisted.tbl_student.grade)
       return next(
         new Error("This course's grade is not the same the student's grade", {
@@ -125,6 +124,18 @@ export const updateStudentsCourses = async (req, res, next) => {
     isStudentCourseExisted.tblCourseId = courseId
   }
 
+  const isUpdatedStudentCourseExisted = await StudentsCourses.findOne({
+    where: {
+      id: { [Op.ne]: studentCourseId },
+      tblStudentId: isStudentCourseExisted.tblStudentId,
+      tblCourseId: isStudentCourseExisted.tblCourseId,
+    },
+  })
+
+  if (isUpdatedStudentCourseExisted)
+    return next(
+      new Error("There's already student-course existed", { cause: 409 })
+    )
   const updatedStudentCourse = await isStudentCourseExisted.save()
 
   res.status(200).json({
@@ -140,14 +151,34 @@ export const deleteStudentsCourses = async (req, res, next) => {
   if (!isStudentCourseExisted)
     return next(new Error('No student-course with this id'), { cause: 404 })
 
-  const deletedStudentCourse = await StudentsCourses.destroy({
-    where: { id: studentCourseId },
-    force: true,
-  })
+  const deletedStudentCourse = await isStudentCourseExisted.destroy()
   if (!deletedStudentCourse) {
     return next(new Error('Error While deleting student-course'))
   }
   res.status(200).json({
     message: 'Student-Course has been deleted successfully',
+  })
+}
+
+export const restoreStudentsCourses = async (req, res, next) => {
+  const { studentCourseId } = req.params
+
+  const isStudentCourseExisted = await StudentsCourses.findByPk(
+    studentCourseId,
+    {
+      paranoid: false,
+    }
+  )
+  if (!isStudentCourseExisted)
+    return next(new Error('No Student-Course with this id'))
+
+  const restoredStudentCourse = await isStudentCourseExisted.restore()
+
+  if (!restoredStudentCourse)
+    return next(new Error('error while restoring Student-Course'))
+
+  res.status(200).json({
+    message: 'Student-Course has been restored successfully',
+    restoredStudentCourse,
   })
 }

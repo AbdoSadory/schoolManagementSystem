@@ -122,6 +122,13 @@ export const createCourseResult = async (req, res, next) => {
   if (!isCourseExisted)
     return next(new Error('no course with this id', { cause: 404 }))
 
+  if (!isCourseExisted.isActive)
+    return next(
+      new Error("can't add result for inactive course", {
+        cause: 409,
+      })
+    )
+
   const newCourseResult = await CourseResults.create(
     {
       year,
@@ -189,6 +196,13 @@ export const updateCourseResult = async (req, res, next) => {
     if (!isCourseExisted)
       return next(new Error('No Course with this id', { cause: 404 }))
 
+    if (!isCourseExisted.isActive)
+      return next(
+        new Error("can't add result for inactive course", {
+          cause: 409,
+        })
+      )
+
     // check if course result is existed with new course id and new student id or old one
     const isCourseResultExistedWithCourseId = await CourseResults.findOne({
       where: {
@@ -251,5 +265,24 @@ export const deleteCourseResult = async (req, res, next) => {
   res.status(200).json({
     message: `Done Deleting Course Result with id:${courseResultId}`,
     deletedCourseResult,
+  })
+}
+
+export const restoreCourseResult = async (req, res, next) => {
+  const { courseResultId } = req.params
+  const isCourseResultExisted = await CourseResults.findByPk(courseResultId, {
+    paranoid: false,
+  })
+  if (!isCourseResultExisted)
+    return next(new Error('No Course-Result with this id'))
+
+  const restoredCourseResult = await isCourseResultExisted.restore()
+
+  if (!restoredCourseResult)
+    return next(new Error('error while restoring course-result'))
+
+  res.status(200).json({
+    message: 'Course-Result has been restored successfully',
+    restoredCourseResult,
   })
 }

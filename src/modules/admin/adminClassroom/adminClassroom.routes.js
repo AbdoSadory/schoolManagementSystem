@@ -12,6 +12,21 @@ adminClassroom.get(
   ),
   expressAsyncHandler(adminClassroomControllers.getAllClassrooms)
 )
+adminClassroom.put(
+  '/changeClassroomState/:classroomId',
+  dataValidationHandler(
+    dataValidationSchemas.adminClassroomChangeClassroomStateSchema
+  ),
+  expressAsyncHandler(adminClassroomControllers.changeClassroomState)
+)
+
+adminClassroom.put(
+  '/restoreClassroom/:classroomId',
+  dataValidationHandler(
+    dataValidationSchemas.adminClassroomRestoreClassroomSchema
+  ),
+  expressAsyncHandler(adminClassroomControllers.restoreClassroom)
+)
 
 adminClassroom
   .route('/:classroomId')

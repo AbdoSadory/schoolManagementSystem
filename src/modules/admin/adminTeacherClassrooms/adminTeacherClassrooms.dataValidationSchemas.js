@@ -33,3 +33,9 @@ export const adminTeachersClassroomsDeleteSchema = {
     teacherClassroomId: Joi.number().min(1),
   }),
 }
+
+export const adminTeachersClassroomsRestoreSchema = {
+  params: Joi.object({
+    teacherClassroomId: Joi.number().min(1),
+  }),
+}

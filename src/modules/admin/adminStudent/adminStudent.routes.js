@@ -35,6 +35,14 @@ adminStudent.put(
   expressAsyncHandler(adminStudentControllers.updateStudent)
 )
 
+adminStudent.put(
+  '/restoreStudent/:studentId',
+  dataValidationHandler(
+    adminStudentDataValidationSchemas.adminStudentRestoreStudentSchema
+  ),
+  expressAsyncHandler(adminStudentControllers.restoreStudent)
+)
+
 adminStudent.delete(
   '/deleteStudent',
   dataValidationHandler(

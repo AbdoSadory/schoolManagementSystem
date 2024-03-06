@@ -24,6 +24,16 @@ adminStudentClassrooms.post(
   expressAsyncHandler(adminStudentClassroomsControllers.createStudentsClassroom)
 )
 
+adminStudentClassrooms.put(
+  '/restoreStudentClassroom/:studentClassroomId',
+  dataValidationHandler(
+    adminStudentClassroomsDataValidationSchemas.adminStudentsClassroomsRestoreSchema
+  ),
+  expressAsyncHandler(
+    adminStudentClassroomsControllers.restoreStudentsClassroom
+  )
+)
+
 adminStudentClassrooms
   .route('/:studentClassroomId')
   .put(
@@ -38,6 +48,8 @@ adminStudentClassrooms
     dataValidationHandler(
       adminStudentClassroomsDataValidationSchemas.adminStudentsClassroomsDeleteSchema
     ),
-    expressAsyncHandler(adminStudentClassroomsControllers.deleteStudentsCourses)
+    expressAsyncHandler(
+      adminStudentClassroomsControllers.deleteStudentsClassroom
+    )
   )
 export default adminStudentClassrooms

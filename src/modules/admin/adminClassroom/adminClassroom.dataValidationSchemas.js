@@ -33,6 +33,19 @@ export const adminClassroomCreateClassroomSchema = {
     courseId: joi.number().required(),
   }),
 }
+export const adminClassroomChangeClassroomStateSchema = {
+  params: Joi.object({
+    classroomId: Joi.number().min(1).required(),
+  }),
+  body: Joi.object({
+    isActive: Joi.boolean().valid(true, false).required(),
+  }),
+}
+export const adminClassroomRestoreClassroomSchema = {
+  params: Joi.object({
+    classroomId: Joi.number().min(1).required(),
+  }),
+}
 export const adminClassroomUpdateClassroomSchema = {
   body: joi.object({
     term: joi.string().valid(...termEnum),
