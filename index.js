@@ -2,6 +2,7 @@ import express from 'express'
 import { config } from 'dotenv'
 import { connectDB } from './DB/connection.js'
 import adminRouter from './src/modules/admin/admin.routes.js'
+import authRouter from './src/modules/auth/auth.routes.js'
 import globalErrorHandler from './src/middlewares/globalErrorHandler.js'
 import cloudinaryConnection from './src/utils/mediaHostConnection.js'
 import allAssociations from './DB/models/associations/associations.js'
@@ -18,6 +19,7 @@ cloudinaryConnection()
 
 app.use(express.json())
 
+app.use('/auth', authRouter)
 app.use('/admin', adminRouter)
 
 app.use('*', (req, res, next) => {
