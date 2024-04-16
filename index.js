@@ -3,6 +3,7 @@ import { config } from 'dotenv'
 import { connectDB } from './DB/connection.js'
 import adminRouter from './src/modules/admin/admin.routes.js'
 import authRouter from './src/modules/auth/auth.routes.js'
+import employeeRouter from './src/modules/employee/employee.routes.js'
 import globalErrorHandler from './src/middlewares/globalErrorHandler.js'
 import cloudinaryConnection from './src/utils/mediaHostConnection.js'
 import allAssociations from './DB/models/associations/associations.js'
@@ -21,6 +22,7 @@ app.use(express.json())
 
 app.use('/auth', authRouter)
 app.use('/admin', adminRouter)
+app.use('/employee', employeeRouter)
 
 app.use('*', (req, res, next) => {
   return next(new Error('Invalid URL', { cause: 404 }))

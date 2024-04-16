@@ -4,10 +4,10 @@ import Course from '../../../../DB/models/course.model.js'
 export const getAllClassrooms = async (req, res, next) => {
   const { term, year, grade, learningMode } = req.query
   let query = {}
-  if (term) query.term = term
-  if (grade) query.grade = grade
-  if (year) query.year = year
-  if (learningMode) query.learningMode = learningMode
+  term && (query.term = term)
+  grade && (query.grade = grade)
+  year && (query.year = year)
+  learningMode && (query.learningMode = learningMode)
   const classrooms = await ClassRoom.findAll(
     { where: query },
     { include: Course }

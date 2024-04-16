@@ -2,14 +2,11 @@ import Finance from '../../../../DB/models/finance.model.js'
 
 export const getAllFinance = async (req, res, next) => {
   const { year } = req.query
-  let finance
-  if (year) {
-    finance = await Finance.findAll({
-      where: { year },
-    })
-  } else {
-    finance = await Finance.findAll()
-  }
+  let query = {}
+  year && (query.year = year)
+  const finance = await Finance.findAll({
+    where: query,
+  })
   res.status(200).json({
     message: 'All Finance',
     finance: finance.length ? finance : 'No finance data yet',

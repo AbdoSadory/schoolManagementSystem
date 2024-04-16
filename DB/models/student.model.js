@@ -72,6 +72,11 @@ const Student = sql_config.define(
       required: true,
       allowNull: false,
     },
+    role: {
+      type: DataTypes.STRING(255),
+      required: true,
+      defaultValue: 'student',
+    },
     grade: {
       type: DataTypes.ENUM,
       values: gradeEnum,
@@ -83,14 +88,13 @@ const Student = sql_config.define(
       required: true,
       allowNull: false,
       defaultValue:
-        'https://res.cloudinary.com/dsjy29z66/image/upload/v1705178632/schoolManagementSystem/assets/imgs/defaultProfileImage_n7ycr5.png',
+        'https://res.cloudinary.com/dsjy29z66/image/upload/v1713295389/schoolManagementSystem/assets/profileImage.jpg',
     },
     profileImagePublic_Id: {
       type: DataTypes.STRING(255),
       required: true,
       allowNull: false,
-      defaultValue:
-        'schoolManagementSystem/assets/imgs/defaultProfileImage_n7ycr5',
+      defaultValue: 'schoolManagementSystem/assets/profileImage',
     },
   },
   { timestamps: true, paranoid: true }
