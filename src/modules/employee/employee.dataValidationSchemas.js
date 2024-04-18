@@ -4,7 +4,10 @@ import {
   employeePositionEnum,
   employeeTypeEnum,
   genderEnum,
+  gradeEnum,
+  learningModeEnum,
   maritalStatusEnum,
+  termEnum,
 } from '../../utils/generalConstants.js'
 import Joi from 'joi'
 export const UpdateProfileSchema = {
@@ -37,5 +40,29 @@ export const UpdateProfileSchema = {
       .valid(...employeeTypeEnum),
     profileImage: Joi.string(),
     salary: Joi.number(),
+  }),
+}
+export const createClassroomSchema = {
+  body: Joi.object({
+    term: Joi.string()
+      .valid(...termEnum)
+      .required(),
+    grade: Joi.string()
+      .valid(...gradeEnum)
+      .required(),
+    year: Joi.date().format('YYYY').required(),
+    learningMode: Joi.string()
+      .valid(...learningModeEnum)
+      .required(),
+    courseId: Joi.number().required(),
+  }),
+}
+export const updateClassroomSchema = {
+  body: Joi.object({
+    term: Joi.string().valid(...termEnum),
+    grade: Joi.string().valid(...gradeEnum),
+    year: Joi.date().format('YYYY'),
+    learningMode: Joi.string().valid(...learningModeEnum),
+    courseId: Joi.number(),
   }),
 }

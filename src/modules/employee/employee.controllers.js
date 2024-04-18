@@ -4,6 +4,7 @@ import Finance from '../../../DB/models/finance.model.js'
 import Student from '../../../DB/models/student.model.js'
 import { Op } from 'sequelize'
 import cloudinaryConnection from '../../utils/mediaHostConnection.js'
+import Course from '../../../DB/models/course.model.js'
 
 export const myProfile = async (req, res, next) => {
   const { id } = req.authenticatedUser
@@ -171,6 +172,31 @@ export const allFinance = async (req, res, next) => {
 }
 
 export const allClassrooms = async (req, res, next) => {
+  const { employeeType, employeePosition } = req.authenticatedUser
+  const authorizedEmployeeTypes = ['owner', 'ceo', 'director', 'teacher']
+  const authorizedTeacherTypes = ['senior', 'team-leader', 'manager']
+  if (!authorizedEmployeeTypes.includes(employeeType))
+    return next(
+      new Error(
+        `You can't access this resource with your position: ${employeeType}`,
+        {
+          cause: 403,
+        }
+      )
+    )
+
+  if (employeeType === 'teacher') {
+    if (!authorizedTeacherTypes.includes(employeePosition))
+      return next(
+        new Error(
+          `You can't access this resource with your position: ${employeePosition}`,
+          {
+            cause: 403,
+          }
+        )
+      )
+  }
+
   const { term, year, grade, learningMode } = req.query
   let query = {}
   term && (query.term = term)
@@ -184,4 +210,201 @@ export const allClassrooms = async (req, res, next) => {
   if (!classrooms) return next(new Error('Error while getting classrooms'))
 
   res.status(200).json({ message: 'Classrooms', classrooms })
+}
+
+export const getClassroomUsingId = async (req, res, next) => {
+  const { employeeType, employeePosition } = req.authenticatedUser
+  const authorizedEmployeeTypes = ['owner', 'ceo', 'director', 'teacher']
+  const authorizedTeacherTypes = ['senior', 'team-leader', 'manager']
+  if (!authorizedEmployeeTypes.includes(employeeType))
+    return next(
+      new Error(
+        `You can't access this resource with your position: ${employeeType}`,
+        {
+          cause: 403,
+        }
+      )
+    )
+
+  if (employeeType === 'teacher') {
+    if (!authorizedTeacherTypes.includes(employeePosition))
+      return next(
+        new Error(
+          `You can't access this resource with your position: ${employeePosition}`,
+          {
+            cause: 403,
+          }
+        )
+      )
+  }
+  const { classroomId } = req.params
+
+  const isClassroomExisted = await ClassRoom.findByPk(classroomId, {
+    include: Course,
+  })
+  if (!isClassroomExisted)
+    return next(new Error('No Classroom with this id', { cause: 404 }))
+
+  res.status(200).json({ message: 'Classroom', classroom: isClassroomExisted })
+}
+
+export const createClassroom = async (req, res, next) => {
+  const { employeeType, employeePosition } = req.authenticatedUser
+  const authorizedEmployeeTypes = ['teacher']
+  const authorizedTeacherTypes = ['senior', 'team-leader', 'manager']
+  if (!authorizedEmployeeTypes.includes(employeeType))
+    return next(
+      new Error(
+        `You can't access this resource with your position: ${employeeType}`,
+        {
+          cause: 403,
+        }
+      )
+    )
+
+  if (employeeType === 'teacher') {
+    if (!authorizedTeacherTypes.includes(employeePosition))
+      return next(
+        new Error(
+          `You can't access this resource with your position: ${employeePosition}`,
+          {
+            cause: 403,
+          }
+        )
+      )
+  }
+
+  const { term, grade, year, learningMode, courseId } = req.body
+
+  const isCourseExisted = await Course.findByPk(courseId)
+  if (!isCourseExisted)
+    return next(new Error('No Course with this id', { cause: 404 }))
+
+  // check if the course grade level doesn't equal the classroom grade
+  if (isCourseExisted.grade !== grade) {
+    return next(
+      new Error(
+        'Course grade is not the same level with your entered classroom grade',
+        { cause: 409 }
+      )
+    )
+  }
+  // check if the course learningMode level doesn't equal the classroom learningMode
+  if (isCourseExisted.learningMode !== learningMode) {
+    return next(
+      new Error(
+        'Course learningMode is not the same like your entered classroom learningMode',
+        { cause: 409 }
+      )
+    )
+  }
+
+  // check if the course is active
+  if (!isCourseExisted.isActive) {
+    return next(
+      new Error(
+        "Course is not active, you can't add classroom to inactive course"
+      ),
+      { cause: 409 }
+    )
+  }
+  const newClassroom = await ClassRoom.create(
+    {
+      term,
+      grade,
+      year,
+      learningMode,
+      tblCourseId: isCourseExisted.id,
+    },
+    {
+      include: { model: Course },
+    }
+  )
+  if (!newClassroom) return next(new Error('Error While creating classroom'))
+  res.status(201).json({ message: 'New Classroom', classroom: newClassroom })
+}
+
+export const updateClassroom = async (req, res, next) => {
+  const { employeeType, employeePosition } = req.authenticatedUser
+  const authorizedEmployeeTypes = ['teacher']
+  const authorizedTeacherTypes = ['senior', 'team-leader', 'manager']
+  if (!authorizedEmployeeTypes.includes(employeeType))
+    return next(
+      new Error(
+        `You can't access this resource with your position: ${employeeType}`,
+        {
+          cause: 403,
+        }
+      )
+    )
+
+  if (employeeType === 'teacher') {
+    if (!authorizedTeacherTypes.includes(employeePosition))
+      return next(
+        new Error(
+          `You can't access this resource with your position: ${employeePosition}`,
+          {
+            cause: 403,
+          }
+        )
+      )
+  }
+
+  const { classroomId } = req.params
+  const { term, grade, year, learningMode, courseId } = req.body
+
+  const isClassroomExisted = await ClassRoom.findByPk(classroomId, {
+    include: Course,
+  })
+  if (!isClassroomExisted)
+    return next(new Error('No Classroom with this id', { cause: 404 }))
+
+  term && (isClassroomExisted.term = term)
+  grade && (isClassroomExisted.grade = grade)
+  year && (isClassroomExisted.year = year)
+  learningMode && (isClassroomExisted.learningMode = learningMode)
+
+  if (courseId) {
+    const isCourseExisted = await Course.findByPk(courseId)
+    if (!isCourseExisted)
+      return next(new Error('No Course with this id', { cause: 404 }))
+    // check if the course grade level doesn't equal the classroom grade
+    if (isCourseExisted.grade !== isClassroomExisted.grade) {
+      return next(
+        new Error(
+          'Course grade is not the same grade level of entered classroom grade',
+          { cause: 409 }
+        )
+      )
+    }
+    // check if the course learningMode level doesn't equal the classroom learningMode
+    if (
+      isCourseExisted.learningMode !== learningMode ||
+      isCourseExisted.learningMode !== isClassroomExisted.learningMode
+    ) {
+      return next(
+        new Error(
+          'Course learningMode is not the same like your entered or old classroom learningMode',
+          { cause: 409 }
+        )
+      )
+    }
+
+    // check if the course is active
+    if (!isCourseExisted.isActive) {
+      return next(
+        new Error(
+          "Course is not active, you can't add classroom to inactive course"
+        ),
+        { cause: 409 }
+      )
+    }
+    isClassroomExisted.tblCourseId = courseId
+  }
+
+  await isClassroomExisted.save()
+
+  res
+    .status(200)
+    .json({ message: 'Updated Classroom', classroom: isClassroomExisted })
 }

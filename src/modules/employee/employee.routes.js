@@ -36,9 +36,19 @@ employeeRouter.get(
   expressAsyncHandler(employeeControllers.allFinance)
 )
 
-employeeRouter.get(
-  '/classrooms',
-  expressAsyncHandler(employeeControllers.allFinance)
-)
+employeeRouter
+  .route('/classrooms')
+  .get(expressAsyncHandler(employeeControllers.allClassrooms))
+  .post(
+    dataValidationHandler(employeeValidationSchemas.createClassroomSchema),
+    expressAsyncHandler(employeeControllers.createClassroom)
+  )
 
+employeeRouter
+  .route('/classrooms/:classroomId')
+  .get(expressAsyncHandler(employeeControllers.getClassroomUsingId))
+  .put(
+    dataValidationHandler(employeeValidationSchemas.updateClassroomSchema),
+    expressAsyncHandler(employeeControllers.updateClassroom)
+  )
 export default employeeRouter
