@@ -23,6 +23,16 @@ export const getAllCourses = async (req, res, next) => {
     courses: courses.length ? courses : 'No Courses',
   })
 }
+
+export const getCourseUsingId = async (req, res, next) => {
+  const { courseId } = req.params
+
+  const isCourseExisted = await Course.findByPk(courseId)
+  if (!isCourseExisted)
+    return next(new Error('No Course with this id', { cause: 404 }))
+
+  res.status(200).json({ message: 'Course', course: isCourseExisted })
+}
 // ========================== Create Course ===================//
 export const createCourse = async (req, res, next) => {
   const { title, description, specialization, learningMode, grade, isActive } =

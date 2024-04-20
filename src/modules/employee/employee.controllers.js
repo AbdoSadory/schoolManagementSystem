@@ -408,3 +408,137 @@ export const updateClassroom = async (req, res, next) => {
     .status(200)
     .json({ message: 'Updated Classroom', classroom: isClassroomExisted })
 }
+
+export const allCourses = async (req, res, next) => {
+  const { employeeType, employeePosition } = req.authenticatedUser
+  const authorizedEmployeeTypes = ['owner', 'ceo', 'director', 'teacher']
+  const authorizedTeacherTypes = ['senior', 'team-leader', 'manager']
+  if (!authorizedEmployeeTypes.includes(employeeType))
+    return next(
+      new Error(
+        `You can't access this resource with your position: ${employeeType}`,
+        {
+          cause: 403,
+        }
+      )
+    )
+
+  if (employeeType === 'teacher') {
+    if (!authorizedTeacherTypes.includes(employeePosition))
+      return next(
+        new Error(
+          `You can't access this resource with your position: ${employeePosition}`,
+          {
+            cause: 403,
+          }
+        )
+      )
+  }
+  const { title, specialization, learningMode, grade, isActive } = req.query
+  let courses
+  let query = {}
+  title && (query.title = { [Op.substring]: title })
+  specialization && (query.specialization = specialization)
+  learningMode && (query.learningMode = learningMode)
+  grade && (query.grade = grade)
+  if (isActive === 'true' || isActive === 'false') {
+    let courseState = isActive === 'true' ? true : false
+    query.isActive = courseState
+  }
+  courses = await Course.findAll({
+    where: query,
+  })
+
+  res.status(200).json({
+    message: 'All Courses',
+    courses: courses.length ? courses : 'No Courses',
+  })
+}
+
+export const getCourseUsingId = async (req, res, next) => {
+  const { employeeType, employeePosition } = req.authenticatedUser
+  const authorizedEmployeeTypes = ['owner', 'ceo', 'director', 'teacher']
+  const authorizedTeacherTypes = ['senior', 'team-leader', 'manager']
+  if (!authorizedEmployeeTypes.includes(employeeType))
+    return next(
+      new Error(
+        `You can't access this resource with your position: ${employeeType}`,
+        {
+          cause: 403,
+        }
+      )
+    )
+
+  if (employeeType === 'teacher') {
+    if (!authorizedTeacherTypes.includes(employeePosition))
+      return next(
+        new Error(
+          `You can't access this resource with your position: ${employeePosition}`,
+          {
+            cause: 403,
+          }
+        )
+      )
+  }
+  const { courseId } = req.params
+
+  const isCourseExisted = await Course.findByPk(courseId)
+  if (!isCourseExisted)
+    return next(new Error('No Course with this id', { cause: 404 }))
+
+  res.status(200).json({ message: 'Course', course: isCourseExisted })
+}
+
+export const createCourse = async (req, res, next) => {
+  const { employeeType, employeePosition } = req.authenticatedUser
+  const authorizedEmployeeTypes = ['teacher']
+  const authorizedTeacherTypes = ['senior', 'team-leader', 'manager']
+  if (!authorizedEmployeeTypes.includes(employeeType))
+    return next(
+      new Error(
+        `You can't access this resource with your position: ${employeeType}`,
+        {
+          cause: 403,
+        }
+      )
+    )
+
+  if (employeeType === 'teacher') {
+    if (!authorizedTeacherTypes.includes(employeePosition))
+      return next(
+        new Error(
+          `You can't access this resource with your position: ${employeePosition}`,
+          {
+            cause: 403,
+          }
+        )
+      )
+  }
+  const { title, description, specialization, learningMode, grade, isActive } =
+    req.body
+  // check by title, specialization, grade, learningMode bc description is dynamic
+  const isCourseExisted = await Course.findOne({
+    where: {
+      title,
+      specialization,
+      grade,
+      learningMode,
+      isActive,
+    },
+  })
+  if (isCourseExisted)
+    return next(new Error('This Course is already existed', { cause: 409 }))
+
+  const newCourse = await Course.create({
+    title,
+    description,
+    specialization,
+    learningMode,
+    grade,
+    isActive,
+  })
+  if (!newCourse) {
+    return next(new Error('Error While Creating Course'))
+  }
+  res.json({ message: 'New Course', newCourse })
+}

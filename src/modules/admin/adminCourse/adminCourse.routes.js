@@ -33,6 +33,7 @@ adminCourse.put(
 
 adminCourse
   .route('/:courseId')
+  .get(expressAsyncHandler(adminCourseControllers.getCourseUsingId))
   .put(
     dataValidationHandler(
       adminCourseDataValidationSchemas.adminCourseUpdateCourse

@@ -51,4 +51,20 @@ employeeRouter
     dataValidationHandler(employeeValidationSchemas.updateClassroomSchema),
     expressAsyncHandler(employeeControllers.updateClassroom)
   )
+
+employeeRouter
+  .route('/courses')
+  .get(expressAsyncHandler(employeeControllers.allCourses))
+  .post(
+    dataValidationHandler(employeeValidationSchemas.createCourseSchema),
+    expressAsyncHandler(employeeControllers.createCourse)
+  )
+
+employeeRouter
+  .route('/courses/:courseId')
+  .get(expressAsyncHandler(employeeControllers.getCourseUsingId))
+  .put(
+    dataValidationHandler(employeeValidationSchemas.updateCourseSchema),
+    expressAsyncHandler(employeeControllers.updateCourse)
+  )
 export default employeeRouter
