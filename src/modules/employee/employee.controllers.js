@@ -542,3 +542,75 @@ export const createCourse = async (req, res, next) => {
   }
   res.json({ message: 'New Course', newCourse })
 }
+
+export const updateCourse = async (req, res, next) => {
+  const { employeeType, employeePosition } = req.authenticatedUser
+  const authorizedEmployeeTypes = ['teacher']
+  const authorizedTeacherTypes = ['senior', 'team-leader', 'manager']
+  if (!authorizedEmployeeTypes.incsludes(employeeType))
+    return next(
+      new Error(
+        `You can't access this resource with your position: ${employeeType}`,
+        {
+          cause: 403,
+        }
+      )
+    )
+
+  if (employeeType === 'teacher') {
+    if (!authorizedTeacherTypes.includes(employeePosition))
+      return next(
+        new Error(
+          `You can't access this resource with your position: ${employeePosition}`,
+          {
+            cause: 403,
+          }
+        )
+      )
+  }
+  const { title, description, specialization, learningMode, grade, isActive } =
+    req.body
+  const { courseId } = req.params
+
+  const isCourseExisted = await Course.findOne({
+    where: { id: courseId },
+  })
+  if (!isCourseExisted) {
+    return next(
+      new Error('This course is not existed', {
+        cause: 404,
+      })
+    )
+  }
+
+  const isUpdatedCourseExisted = await Course.findOne({
+    where: {
+      id: { [Op.ne]: courseId },
+      title: title || isCourseExisted.title,
+      specialization: specialization || isCourseExisted.specialization,
+      learningMode: learningMode || isCourseExisted.learningMode,
+      grade: grade || isCourseExisted.grade,
+      isActive: isActive || isCourseExisted.isActive,
+    },
+  })
+
+  if (isUpdatedCourseExisted)
+    return next(
+      new Error('This course with new values is already existed', {
+        cause: 409,
+      })
+    )
+
+  title && (isCourseExisted.title = title)
+  description && (isCourseExisted.description = description)
+  specialization && (isCourseExisted.specialization = specialization)
+  learningMode && (isCourseExisted.learningMode = learningMode)
+  grade && (isCourseExisted.grade = grade)
+  isActive && (isCourseExisted.isActive = isActive)
+
+  const updatedCourse = await isCourseExisted.save()
+  if (!updatedCourse) {
+    return next(new Error('Error while updating The course'))
+  }
+  res.status(200).json({ message: 'Updated Course', updatedCourse })
+}
