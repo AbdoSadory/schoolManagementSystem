@@ -409,6 +409,45 @@ export const updateClassroom = async (req, res, next) => {
     .json({ message: 'Updated Classroom', classroom: isClassroomExisted })
 }
 
+export const deleteClassroom = async (req, res, next) => {
+  const { employeeType, employeePosition } = req.authenticatedUser
+  const authorizedEmployeeTypes = ['teacher']
+  const authorizedTeacherTypes = ['senior', 'team-leader', 'manager']
+  if (!authorizedEmployeeTypes.includes(employeeType))
+    return next(
+      new Error(
+        `You can't access this resource with your position: ${employeeType}`,
+        {
+          cause: 403,
+        }
+      )
+    )
+
+  if (employeeType === 'teacher') {
+    if (!authorizedTeacherTypes.includes(employeePosition))
+      return next(
+        new Error(
+          `You can't access this resource with your position: ${employeePosition}`,
+          {
+            cause: 403,
+          }
+        )
+      )
+  }
+
+  const { classroomId } = req.params
+
+  const isClassroomExisted = await ClassRoom.findByPk(classroomId, {
+    include: Course,
+  })
+  if (!isClassroomExisted)
+    return next(new Error('No Classroom with this id', { cause: 404 }))
+
+  await isClassroomExisted.destroy()
+
+  res.status(200).json({ message: 'Classroom has been deleted successfully' })
+}
+
 export const allCourses = async (req, res, next) => {
   const { employeeType, employeePosition } = req.authenticatedUser
   const authorizedEmployeeTypes = ['owner', 'ceo', 'director', 'teacher']
@@ -613,4 +652,98 @@ export const updateCourse = async (req, res, next) => {
     return next(new Error('Error while updating The course'))
   }
   res.status(200).json({ message: 'Updated Course', updatedCourse })
+}
+
+export const deleteCourse = async (req, res, next) => {
+  const { employeeType, employeePosition } = req.authenticatedUser
+  const authorizedEmployeeTypes = ['teacher']
+  const authorizedTeacherTypes = ['senior', 'team-leader', 'manager']
+  if (!authorizedEmployeeTypes.incsludes(employeeType))
+    return next(
+      new Error(
+        `You can't access this resource with your position: ${employeeType}`,
+        {
+          cause: 403,
+        }
+      )
+    )
+
+  if (employeeType === 'teacher') {
+    if (!authorizedTeacherTypes.includes(employeePosition))
+      return next(
+        new Error(
+          `You can't access this resource with your position: ${employeePosition}`,
+          {
+            cause: 403,
+          }
+        )
+      )
+  }
+  const { courseId } = req.params
+  const isCourseExisted = await Course.findOne({
+    where: {
+      id: courseId,
+    },
+  })
+  if (!isCourseExisted) {
+    return next(
+      new Error('This Course is not existed', {
+        cause: 404,
+      })
+    )
+  }
+  const deletedCourse = await isCourseExisted.destroy()
+  if (!deletedCourse) {
+    return next(new Error('Error While deleting Course'))
+  }
+
+  res.status(200).json({ message: 'Course has been deleted successfully' })
+}
+
+export const changeCourseState = async (req, res, next) => {
+  const { employeeType, employeePosition } = req.authenticatedUser
+  const authorizedEmployeeTypes = ['teacher']
+  const authorizedTeacherTypes = ['senior', 'team-leader', 'manager']
+  if (!authorizedEmployeeTypes.incsludes(employeeType))
+    return next(
+      new Error(
+        `You can't access this resource with your position: ${employeeType}`,
+        {
+          cause: 403,
+        }
+      )
+    )
+
+  if (employeeType === 'teacher') {
+    if (!authorizedTeacherTypes.includes(employeePosition))
+      return next(
+        new Error(
+          `You can't access this resource with your position: ${employeePosition}`,
+          {
+            cause: 403,
+          }
+        )
+      )
+  }
+  const { isActive } = req.body
+  const { courseId } = req.params
+
+  const isCourseExisted = await Course.findOne({
+    where: { id: courseId },
+  })
+  if (!isCourseExisted) {
+    return next(
+      new Error('This course is not existed', {
+        cause: 404,
+      })
+    )
+  }
+
+  isCourseExisted.isActive = isActive
+
+  const updatedCourse = await isCourseExisted.save()
+  if (!updatedCourse) {
+    return next(new Error('Error while changing The course state'))
+  }
+  res.status(200).json({ message: 'Change Course State', updatedCourse })
 }

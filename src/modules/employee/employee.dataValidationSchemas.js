@@ -11,153 +11,193 @@ import {
   termEnum,
 } from '../../utils/generalConstants.js'
 import Joi from 'joi'
+import joiDate from '@joi/date'
+const joi = Joi.extend(joiDate)
+
 export const UpdateProfileSchema = {
-  body: Joi.object({
-    name: Joi.string().trim().min(6),
-    email: Joi.string().email().trim(),
-    password: Joi.string().trim().alphanum().min(6),
-    nationalID: Joi.string().trim().min(14).max(14),
-    nationality: Joi.string().trim(),
-    phoneNumber: Joi.string().trim().min(7).max(15),
-    age: Joi.number(),
-    gender: Joi.string()
+  body: joi.object({
+    name: joi.string().trim().min(6),
+    email: joi.string().email().trim(),
+    password: joi.string().trim().alphanum().min(6),
+    nationalID: joi.string().trim().min(14).max(14),
+    nationality: joi.string().trim(),
+    phoneNumber: joi.string().trim().min(7).max(15),
+    age: joi.number(),
+    gender: joi
+      .string()
       .trim()
       .valid(...genderEnum),
-    maritalStatus: Joi.string()
+    maritalStatus: joi
+      .string()
       .trim()
       .valid(...maritalStatusEnum),
-    graduationYear: Joi.date().less('now'),
-    educationDegree: Joi.string()
+    graduationYear: joi.date().less('now'),
+    educationDegree: joi
+      .string()
       .trim()
       .valid(...educationDegreeEnum),
-    employeePosition: Joi.string()
+    employeePosition: joi
+      .string()
       .trim()
       .valid(...employeePositionEnum),
-    specialization: Joi.string()
+    specialization: joi
+      .string()
       .trim()
       .valid(...courseSpecializationEnum),
-    employeeType: Joi.string()
+    employeeType: joi
+      .string()
       .trim()
       .valid(...employeeTypeEnum),
-    profileImage: Joi.string(),
-    salary: Joi.number(),
+    profileImage: joi.string(),
+    salary: joi.number(),
   }),
 }
 export const createClassroomSchema = {
-  body: Joi.object({
-    term: Joi.string()
+  body: joi.object({
+    term: joi
+      .string()
       .valid(...termEnum)
       .required(),
-    grade: Joi.string()
+    grade: joi
+      .string()
       .valid(...gradeEnum)
       .required(),
-    year: Joi.date().format('YYYY').required(),
-    learningMode: Joi.string()
+    year: joi.date().format('YYYY').required(),
+    learningMode: joi
+      .string()
       .valid(...learningModeEnum)
       .required(),
-    courseId: Joi.number().required(),
+    courseId: joi.number().required(),
   }),
 }
 export const updateClassroomSchema = {
-  body: Joi.object({
-    term: Joi.string().valid(...termEnum),
-    grade: Joi.string().valid(...gradeEnum),
-    year: Joi.date().format('YYYY'),
-    learningMode: Joi.string().valid(...learningModeEnum),
-    courseId: Joi.number(),
+  body: joi.object({
+    term: joi.string().valid(...termEnum),
+    grade: joi.string().valid(...gradeEnum),
+    year: joi.date().format('YYYY'),
+    learningMode: joi.string().valid(...learningModeEnum),
+    courseId: joi.number(),
+  }),
+}
+export const deleteClassroomSchema = {
+  params: joi.object({
+    classroomId: joi.number().min(1).required(),
   }),
 }
 export const createCourseSchema = {
-  body: Joi.object({
-    title: Joi.string()
+  body: joi.object({
+    title: joi
+      .string()
       .trim()
       .valid(...courseTitleEnum)
       .required(),
-    description: Joi.string().trim(),
-    specialization: Joi.string()
+    description: joi.string().trim(),
+    specialization: joi
+      .string()
       .trim()
       .valid(...courseSpecializationEnum)
       .required()
       .when('title', [
         {
-          is: Joi.string().valid('english', 'french'),
+          is: joi.string().valid('english', 'french'),
           then: 'languages',
         },
-        { is: Joi.string().valid('history'), then: 'history' },
+        { is: joi.string().valid('history'), then: 'history' },
         {
-          is: Joi.string().valid(
-            'physics',
-            'chemistry',
-            'biology',
-            'zoology',
-            'computer science'
-          ),
+          is: joi
+            .string()
+            .valid(
+              'physics',
+              'chemistry',
+              'biology',
+              'zoology',
+              'computer science'
+            ),
           then: 'science',
         },
         {
-          is: Joi.string().valid('mathematics', 'statistics'),
+          is: joi.string().valid('mathematics', 'statistics'),
           then: 'mathematics',
         },
-        { is: Joi.string().valid('sport'), then: 'sports' },
-        { is: Joi.string().valid('art'), then: 'art' },
-        { is: Joi.string().valid('music'), then: 'music' },
+        { is: joi.string().valid('sport'), then: 'sports' },
+        { is: joi.string().valid('art'), then: 'art' },
+        { is: joi.string().valid('music'), then: 'music' },
       ])
       .messages({
         '*': 'The title of the course must be related to specialization',
       }),
-    grade: Joi.string()
+    grade: joi
+      .string()
       .trim()
       .valid(...gradeEnum)
       .required(),
-    learningMode: Joi.string()
+    learningMode: joi
+      .string()
       .trim()
       .valid(...learningModeEnum)
       .required(),
-    isActive: Joi.boolean().required(),
+    isActive: joi.boolean().required(),
   }),
 }
 export const updateCourseSchema = {
-  params: Joi.object({
-    courseId: Joi.number().min(1).required(),
+  params: joi.object({
+    courseId: joi.number().min(1).required(),
   }),
-  body: Joi.object({
-    title: Joi.string()
-      .trim()
-      .valid(...courseTitleEnum),
-    description: Joi.string().trim(),
-    specialization: Joi.string()
-      .trim()
-      .valid(...courseSpecializationEnum)
-      .when('title', [
-        {
-          is: Joi.string().valid('english', 'french'),
-          then: 'languages',
-        },
-        { is: Joi.string().valid('history'), then: 'history' },
-        {
-          is: Joi.string().valid(
-            'physics',
-            'chemistry',
-            'biology',
-            'zoology',
-            'computer science'
-          ),
-          then: 'science',
-        },
-        {
-          is: Joi.string().valid('mathematics', 'statistics'),
-          then: 'mathematics',
-        },
-        { is: Joi.string().valid('sport'), then: 'sports' },
-        { is: Joi.string().valid('art'), then: 'art' },
-        {
-          is: Joi.string().valid('music'),
-          then: 'music',
-        },
-      ]),
-    grade: Joi.string()
-      .trim()
-      .valid(...gradeEnum),
-    isActive: Joi.boolean(),
-  }).with('title', 'specialization'),
+  body: joi
+    .object({
+      title: joi
+        .string()
+        .trim()
+        .valid(...courseTitleEnum),
+      description: joi.string().trim(),
+      specialization: joi
+        .string()
+        .trim()
+        .valid(...courseSpecializationEnum)
+        .when('title', [
+          {
+            is: joi.string().valid('english', 'french'),
+            then: 'languages',
+          },
+          { is: joi.string().valid('history'), then: 'history' },
+          {
+            is: joi
+              .string()
+              .valid(
+                'physics',
+                'chemistry',
+                'biology',
+                'zoology',
+                'computer science'
+              ),
+            then: 'science',
+          },
+          {
+            is: joi.string().valid('mathematics', 'statistics'),
+            then: 'mathematics',
+          },
+          { is: joi.string().valid('sport'), then: 'sports' },
+          { is: joi.string().valid('art'), then: 'art' },
+          {
+            is: joi.string().valid('music'),
+            then: 'music',
+          },
+        ]),
+      grade: joi
+        .string()
+        .trim()
+        .valid(...gradeEnum),
+      isActive: joi.boolean(),
+    })
+    .with('title', 'specialization'),
+}
+export const deleteCourseSchema = {
+  params: joi.object({
+    courseId: joi.number().min(1).required(),
+  }),
+}
+export const restoreCourseSchema = {
+  params: joi.object({
+    courseId: joi.number().min(1).required(),
+  }),
 }
