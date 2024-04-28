@@ -201,3 +201,63 @@ export const restoreCourseSchema = {
     courseId: joi.number().min(1).required(),
   }),
 }
+
+export const createCourseResultSchema = {
+  body: joi.object({
+    year: joi.date().format('YYYY').less('now').required(),
+    term: joi
+      .string()
+      .valid(...termEnum)
+      .required(),
+    oral: joi.number().min(0).required(),
+    practical: joi.number().min(0).required(),
+    midterm: joi.number().min(0).required(),
+    final: joi.number().min(0).required(),
+    studentId: joi
+      .string()
+      .guid({ version: ['uuidv4'], separator: '-' })
+      .required()
+      .messages({
+        '*': 'Id must be uuidv4 with separator',
+      }),
+    courseId: joi.number().required(),
+  }),
+}
+
+export const getCourseResultByIdSchema = {
+  params: Joi.object({
+    courseResultId: Joi.number().min(1),
+  }),
+}
+
+export const updateCourseResultSchema = {
+  params: joi.object({
+    courseResultId: joi.number(),
+  }),
+  body: joi.object({
+    year: joi.date().format('YYYY').less('now'),
+    term: joi.string().valid(...termEnum),
+    oral: joi.number().min(0),
+    practical: joi.number().min(0),
+    midterm: joi.number().min(0),
+    final: joi.number().min(0),
+    studentId: joi
+      .string()
+      .guid({ version: ['uuidv4'], separator: '-' })
+      .messages({
+        '*': 'Id must be uuidv4 with separator',
+      }),
+    courseId: joi.number(),
+  }),
+}
+
+export const deleteCourseResultSchema = {
+  params: Joi.object({
+    courseResultId: Joi.number().min(1),
+  }),
+}
+export const restoreCourseResultSchema = {
+  params: Joi.object({
+    courseResultId: Joi.number().min(1),
+  }),
+}

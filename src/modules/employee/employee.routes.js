@@ -36,6 +36,7 @@ employeeRouter.get(
   expressAsyncHandler(employeeControllers.allFinance)
 )
 
+//classroom
 employeeRouter
   .route('/classroom')
   .get(expressAsyncHandler(employeeControllers.allClassrooms))
@@ -56,6 +57,7 @@ employeeRouter
     expressAsyncHandler(employeeControllers.d)
   )
 
+//course
 employeeRouter
   .route('/course')
   .get(expressAsyncHandler(employeeControllers.allCourses))
@@ -81,4 +83,33 @@ employeeRouter.put(
   dataValidationHandler(employeeValidationSchemas.restoreCourseSchema),
   expressAsyncHandler(employeeControllers.changeCourseState)
 )
+
+////////////////////////// Course Results
+employeeRouter
+  .route('/courseResults')
+  .get(expressAsyncHandler(employeeControllers.getAllCourseResults))
+  .post(
+    dataValidationHandler(employeeValidationSchemas.createCourseResultSchema),
+    expressAsyncHandler(employeeControllers.createCourseResult)
+  )
+employeeRouter.put(
+  '/restoreCourseResult/:courseResultId',
+  dataValidationHandler(employeeValidationSchemas.restoreCourseResultSchema),
+  expressAsyncHandler(employeeControllers.restoreCourseResult)
+)
+employeeRouter
+  .route('/courseResults/:courseResultId')
+  .get(
+    dataValidationHandler(employeeValidationSchemas.getCourseResultByIdSchema),
+    expressAsyncHandler(employeeControllers.getCourseResultById)
+  )
+  .put(
+    dataValidationHandler(employeeValidationSchemas.updateCourseResultSchema),
+    expressAsyncHandler(employeeControllers.updateCourseResult)
+  )
+  .delete(
+    dataValidationHandler(employeeValidationSchemas.deleteCourseResultSchema),
+    expressAsyncHandler(employeeControllers.deleteCourseResult)
+  )
+
 export default employeeRouter
