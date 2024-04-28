@@ -1108,3 +1108,31 @@ export const restoreCourseResult = async (req, res, next) => {
     restoredCourseResult,
   })
 }
+
+export const getAllStudents = async (req, res, next) => {
+  const { employeeType } = req.authenticatedUser
+  const authorizedEmployeeTypes = ['owner', 'ceo', 'director', 'teacher']
+  if (!authorizedEmployeeTypes.includes(employeeType))
+    return next(
+      new Error(
+        `You can't access this resource with your position: ${employeeType}`,
+        {
+          cause: 403,
+        }
+      )
+    )
+
+  const { name, email } = req.query
+  const query = {}
+  name && (query.name = name)
+  email && (query.email = email)
+
+  const students = await Student.findAll({
+    where: query,
+  })
+
+  res.status(200).json({
+    message: 'All Students',
+    students,
+  })
+}

@@ -36,7 +36,7 @@ employeeRouter.get(
   expressAsyncHandler(employeeControllers.allFinance)
 )
 
-//classroom
+//======================classroom
 employeeRouter
   .route('/classroom')
   .get(expressAsyncHandler(employeeControllers.allClassrooms))
@@ -57,7 +57,7 @@ employeeRouter
     expressAsyncHandler(employeeControllers.d)
   )
 
-//course
+//====================== course
 employeeRouter
   .route('/course')
   .get(expressAsyncHandler(employeeControllers.allCourses))
@@ -84,7 +84,7 @@ employeeRouter.put(
   expressAsyncHandler(employeeControllers.changeCourseState)
 )
 
-////////////////////////// Course Results
+//====================== Course Results
 employeeRouter
   .route('/courseResults')
   .get(expressAsyncHandler(employeeControllers.getAllCourseResults))
@@ -112,4 +112,9 @@ employeeRouter
     expressAsyncHandler(employeeControllers.deleteCourseResult)
   )
 
+//====================== Student
+employeeRouter.get(
+  '/students',
+  expressAsyncHandler(employeeControllers.getAllStudents)
+)
 export default employeeRouter

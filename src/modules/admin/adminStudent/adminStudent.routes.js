@@ -5,6 +5,7 @@ import dataValidationHandler from '../../../middlewares/dataValidationHandler.js
 import * as adminStudentDataValidationSchemas from './adminStudent.dataValidationSchemas.js'
 import fileUploadingHandler from '../../../middlewares/filesUploadingHandler.js'
 import allowedExtensions from '../../../utils/allowedExtensions.js'
+
 const adminStudent = Router({ mergeParams: true })
 
 adminStudent.get(
