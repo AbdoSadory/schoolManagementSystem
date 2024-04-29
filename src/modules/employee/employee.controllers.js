@@ -9,6 +9,7 @@ import CourseResults from '../../../DB/models/courseResults.model.js'
 import TeachersCourses from '../../../DB/models/junctionTables/teacherCourse.model.js'
 import TeachersClassRooms from '../../../DB/models/junctionTables/teachersClassRooms.model.js'
 import StudentsCourses from '../../../DB/models/junctionTables/studentCourse.model.js'
+import StudentsClassRooms from '../../../DB/models/junctionTables/studentClassRooms.model.js'
 
 export const myProfile = async (req, res, next) => {
   const { id } = req.authenticatedUser
@@ -174,7 +175,6 @@ export const allFinance = async (req, res, next) => {
     finance: finance.length ? finance : 'No finance data yet',
   })
 }
-
 export const allClassrooms = async (req, res, next) => {
   const { employeeType, employeePosition } = req.authenticatedUser
   const authorizedEmployeeTypes = ['owner', 'ceo', 'director', 'teacher']
@@ -215,7 +215,6 @@ export const allClassrooms = async (req, res, next) => {
 
   res.status(200).json({ message: 'Classrooms', classrooms })
 }
-
 export const getClassroomUsingId = async (req, res, next) => {
   const { employeeType, employeePosition } = req.authenticatedUser
   const authorizedEmployeeTypes = ['owner', 'ceo', 'director', 'teacher']
@@ -251,7 +250,6 @@ export const getClassroomUsingId = async (req, res, next) => {
 
   res.status(200).json({ message: 'Classroom', classroom: isClassroomExisted })
 }
-
 export const createClassroom = async (req, res, next) => {
   const { employeeType, employeePosition } = req.authenticatedUser
   const authorizedEmployeeTypes = ['teacher']
@@ -327,7 +325,6 @@ export const createClassroom = async (req, res, next) => {
   if (!newClassroom) return next(new Error('Error While creating classroom'))
   res.status(201).json({ message: 'New Classroom', classroom: newClassroom })
 }
-
 export const updateClassroom = async (req, res, next) => {
   const { employeeType, employeePosition } = req.authenticatedUser
   const authorizedEmployeeTypes = ['teacher']
@@ -412,7 +409,6 @@ export const updateClassroom = async (req, res, next) => {
     .status(200)
     .json({ message: 'Updated Classroom', classroom: isClassroomExisted })
 }
-
 export const deleteClassroom = async (req, res, next) => {
   const { employeeType, employeePosition } = req.authenticatedUser
   const authorizedEmployeeTypes = ['teacher']
@@ -451,7 +447,6 @@ export const deleteClassroom = async (req, res, next) => {
 
   res.status(200).json({ message: 'Classroom has been deleted successfully' })
 }
-
 export const allCourses = async (req, res, next) => {
   const { employeeType, employeePosition } = req.authenticatedUser
   const authorizedEmployeeTypes = ['owner', 'ceo', 'director', 'teacher']
@@ -497,7 +492,6 @@ export const allCourses = async (req, res, next) => {
     courses: courses.length ? courses : 'No Courses',
   })
 }
-
 export const getCourseUsingId = async (req, res, next) => {
   const { employeeType, employeePosition } = req.authenticatedUser
   const authorizedEmployeeTypes = ['owner', 'ceo', 'director', 'teacher']
@@ -531,7 +525,6 @@ export const getCourseUsingId = async (req, res, next) => {
 
   res.status(200).json({ message: 'Course', course: isCourseExisted })
 }
-
 export const createCourse = async (req, res, next) => {
   const { employeeType, employeePosition } = req.authenticatedUser
   const authorizedEmployeeTypes = ['teacher']
@@ -585,7 +578,6 @@ export const createCourse = async (req, res, next) => {
   }
   res.json({ message: 'New Course', newCourse })
 }
-
 export const updateCourse = async (req, res, next) => {
   const { employeeType, employeePosition } = req.authenticatedUser
   const authorizedEmployeeTypes = ['teacher']
@@ -657,7 +649,6 @@ export const updateCourse = async (req, res, next) => {
   }
   res.status(200).json({ message: 'Updated Course', updatedCourse })
 }
-
 export const deleteCourse = async (req, res, next) => {
   const { employeeType, employeePosition } = req.authenticatedUser
   const authorizedEmployeeTypes = ['teacher']
@@ -703,7 +694,6 @@ export const deleteCourse = async (req, res, next) => {
 
   res.status(200).json({ message: 'Course has been deleted successfully' })
 }
-
 export const changeCourseState = async (req, res, next) => {
   const { employeeType, employeePosition } = req.authenticatedUser
   const authorizedEmployeeTypes = ['teacher']
@@ -751,7 +741,6 @@ export const changeCourseState = async (req, res, next) => {
   }
   res.status(200).json({ message: 'Change Course State', updatedCourse })
 }
-
 export const getAllCourseResults = async (req, res, next) => {
   const { employeeType } = req.authenticatedUser
   const authorizedEmployeeTypes = ['owner', 'ceo', 'director', 'teacher']
@@ -1069,7 +1058,6 @@ export const deleteCourseResult = async (req, res, next) => {
     deletedCourseResult,
   })
 }
-
 export const restoreCourseResult = async (req, res, next) => {
   const { employeeType, employeePosition } = req.authenticatedUser
   const authorizedEmployeeTypes = ['teacher']
@@ -1111,7 +1099,6 @@ export const restoreCourseResult = async (req, res, next) => {
     restoredCourseResult,
   })
 }
-
 export const getAllStudents = async (req, res, next) => {
   const { employeeType } = req.authenticatedUser
   const authorizedEmployeeTypes = ['owner', 'ceo', 'director', 'teacher']
@@ -1139,7 +1126,6 @@ export const getAllStudents = async (req, res, next) => {
     students,
   })
 }
-
 export const getAllTeachersCourses = async (req, res, next) => {
   const { id, employeeType, employeePosition } = req.authenticatedUser
   const authorizedEmployeeTypes = ['owner', 'ceo', 'director', 'teacher']
@@ -1428,7 +1414,6 @@ export const restoreTeachersCourses = async (req, res, next) => {
     restoredCourse,
   })
 }
-
 export const getAllTeachersClassrooms = async (req, res, next) => {
   const { id, employeeType, employeePosition } = req.authenticatedUser
   const authorizedEmployeeTypes = ['owner', 'ceo', 'director', 'teacher']
@@ -1467,7 +1452,6 @@ export const getAllTeachersClassrooms = async (req, res, next) => {
     teachersClassrooms,
   })
 }
-
 export const createTeachersClassroom = async (req, res, next) => {
   const { employeeType, employeePosition } = req.authenticatedUser
   const authorizedEmployeeTypes = ['teacher']
@@ -1543,7 +1527,6 @@ export const createTeachersClassroom = async (req, res, next) => {
     newTeacherClassroom,
   })
 }
-
 export const updateTeachersClassroom = async (req, res, next) => {
   const { employeeType, employeePosition } = req.authenticatedUser
   const authorizedEmployeeTypes = ['teacher']
@@ -1641,7 +1624,6 @@ export const updateTeachersClassroom = async (req, res, next) => {
     updatedTeacherClassroom,
   })
 }
-
 export const deleteTeachersClassrooms = async (req, res, next) => {
   const { employeeType, employeePosition } = req.authenticatedUser
   const authorizedEmployeeTypes = ['teacher']
@@ -1683,7 +1665,6 @@ export const deleteTeachersClassrooms = async (req, res, next) => {
     message: 'Teacher-Classroom has been deleted successfully',
   })
 }
-
 export const restoreTeachersClassrooms = async (req, res, next) => {
   const { employeeType, employeePosition } = req.authenticatedUser
   const authorizedEmployeeTypes = ['teacher']
@@ -1728,7 +1709,6 @@ export const restoreTeachersClassrooms = async (req, res, next) => {
     restoredTeacherClassroom,
   })
 }
-
 export const getAllStudentCourses = async (req, res, next) => {
   const { employeeType } = req.authenticatedUser
   const authorizedEmployeeTypes = ['owner', 'ceo', 'director', 'teacher']
@@ -1756,7 +1736,6 @@ export const getAllStudentCourses = async (req, res, next) => {
     studentsCourses,
   })
 }
-
 export const createStudentsCourses = async (req, res, next) => {
   const { employeeType } = req.authenticatedUser
   const authorizedEmployeeTypes = ['teacher']
@@ -1808,7 +1787,6 @@ export const createStudentsCourses = async (req, res, next) => {
 
   res.status(201).json({ message: 'Student Course Record', newStudentCourse })
 }
-
 export const updateStudentsCourses = async (req, res, next) => {
   const { employeeType } = req.authenticatedUser
   const authorizedEmployeeTypes = ['teacher']
@@ -1887,7 +1865,6 @@ export const updateStudentsCourses = async (req, res, next) => {
     updatedStudentCourse,
   })
 }
-
 export const deleteStudentsCourses = async (req, res, next) => {
   const { employeeType } = req.authenticatedUser
   const authorizedEmployeeTypes = ['teacher']
@@ -1915,7 +1892,6 @@ export const deleteStudentsCourses = async (req, res, next) => {
     message: 'Student-Course has been deleted successfully',
   })
 }
-
 export const restoreStudentsCourses = async (req, res, next) => {
   const { employeeType } = req.authenticatedUser
   const authorizedEmployeeTypes = ['teacher']
@@ -1948,5 +1924,247 @@ export const restoreStudentsCourses = async (req, res, next) => {
   res.status(200).json({
     message: 'Student-Course has been restored successfully',
     restoredStudentCourse,
+  })
+}
+export const getAllStudentsClassrooms = async (req, res, next) => {
+  const { employeeType } = req.authenticatedUser
+  const authorizedEmployeeTypes = ['owner', 'ceo', 'director', 'teacher']
+  if (!authorizedEmployeeTypes.includes(employeeType))
+    return next(
+      new Error(
+        `You can't access this resource with your position: ${employeeType}`,
+        {
+          cause: 403,
+        }
+      )
+    )
+
+  const { studentId, classroomId } = req.query
+  let query = {}
+  studentId && (query.tblStudentId = studentId)
+  classroomId && (query.tblClassRoomId = classroomId)
+  const studentsClassrooms = await StudentsClassRooms.findAll({
+    where: query,
+  })
+
+  res.status(200).json({
+    message: 'All students Classrooms',
+    studentsClassrooms,
+  })
+}
+export const createStudentsClassroom = async (req, res, next) => {
+  const { employeeType } = req.authenticatedUser
+  const authorizedEmployeeTypes = ['teacher']
+  if (!authorizedEmployeeTypes.includes(employeeType))
+    return next(
+      new Error(
+        `You can't access this resource with your position: ${employeeType}`,
+        {
+          cause: 403,
+        }
+      )
+    )
+  const { classroomId, studentId } = req.body
+  //  check if classroom is existed
+  const isClassroomExisted = await ClassRoom.findByPk(classroomId, {
+    include: { model: Course },
+  })
+
+  if (!isClassroomExisted)
+    return next(new Error('No classroom with this id', { cause: 404 }))
+  if (!isClassroomExisted.isActive)
+    return next(new Error("this classroom isn't active", { cause: 409 }))
+
+  //  check if the Student is existed
+  const isStudentExisted = await Student.findByPk(studentId)
+  if (!isStudentExisted)
+    return next(new Error('No Student with this id', { cause: 404 }))
+
+  // check if the student classroom is existed
+  const isStudentClassroomExisted = await StudentsClassRooms.findOne({
+    where: { tblStudentId: studentId, tblClassRoomId: classroomId },
+  })
+  if (isStudentClassroomExisted)
+    return next(
+      new Error('Student and Classroom record is already existed', {
+        cause: 409,
+      })
+    )
+
+  // check if the student has enrolled to this course
+  const isStudentEnrolledToTheCourse = await StudentsCourses.findOne({
+    where: {
+      tblStudentId: studentId,
+      tblCourseId: isClassroomExisted.tblCourseId,
+    },
+  })
+
+  if (!isStudentEnrolledToTheCourse)
+    return next(
+      new Error("Student hasn't enrolled to this course of this classroom.", {
+        cause: 409,
+      })
+    )
+
+  // check if the student course is existed
+  const newStudentClassroom = await StudentsClassRooms.create({
+    tblStudentId: studentId,
+    tblClassRoomId: classroomId,
+  })
+  if (!newStudentClassroom)
+    return next(new Error('Error while creating student classroom record'))
+
+  res
+    .status(201)
+    .json({ message: 'Student Classroom Record', newStudentClassroom })
+}
+export const updateStudentsClassroom = async (req, res, next) => {
+  const { employeeType } = req.authenticatedUser
+  const authorizedEmployeeTypes = ['teacher']
+  if (!authorizedEmployeeTypes.includes(employeeType))
+    return next(
+      new Error(
+        `You can't access this resource with your position: ${employeeType}`,
+        {
+          cause: 403,
+        }
+      )
+    )
+  const { studentClassroomId } = req.params
+  const { studentId, classroomId } = req.body
+
+  const isStudentClassroomExisted = await StudentsClassRooms.findByPk(
+    studentClassroomId,
+    {
+      include: [{ model: Student }, { model: ClassRoom }],
+    }
+  )
+  if (!isStudentClassroomExisted)
+    return next(new Error('No student-classroom with this id'), { cause: 404 })
+
+  if (studentId) {
+    const isStudentExisted = await Student.findByPk(studentId)
+    if (!isStudentExisted)
+      return next(new Error('No Student with this id', { cause: 404 }))
+
+    const isStudentEnrolledToTheCourse = await StudentsCourses.findOne({
+      where: {
+        tblStudentId: studentId,
+        tblCourseId: isStudentClassroomExisted.tbl_classRoom.tblCourseId,
+      },
+    })
+
+    if (!isStudentEnrolledToTheCourse)
+      return next(
+        new Error("Student hasn't enrolled to this course.", {
+          cause: 409,
+        })
+      )
+    isStudentClassroomExisted.tblStudentId = studentId
+  }
+
+  if (classroomId) {
+    const isClassroomExisted = await ClassRoom.findByPk(classroomId, {
+      include: { model: Course },
+    })
+    if (!isClassroomExisted)
+      return next(new Error('No classroom with this id', { cause: 404 }))
+    if (!isClassroomExisted.isActive)
+      return next(new Error("this classroom isn't active", { cause: 409 }))
+
+    const isStudentEnrolledToTheCourse = await StudentsCourses.findOne({
+      where: {
+        tblStudentId: isStudentClassroomExisted.tblStudentId,
+        tblCourseId: isClassroomExisted.tbl_course.id,
+      },
+    })
+    if (!isStudentEnrolledToTheCourse)
+      return next(
+        new Error("Student hasn't enrolled to this classroom's course .", {
+          cause: 409,
+        })
+      )
+    isStudentClassroomExisted.tblClassRoomId = classroomId
+  }
+
+  const isUpdatedStudentClassroomExisted = await StudentsClassRooms.findOne({
+    where: {
+      id: { [Op.ne]: studentClassroomId },
+      tblStudentId: isStudentClassroomExisted.tblStudentId,
+      tblClassRoomId: isStudentClassroomExisted.tblClassRoomId,
+    },
+  })
+
+  if (isUpdatedStudentClassroomExisted)
+    return next(
+      new Error("There's already student-classroom existed", { cause: 409 })
+    )
+
+  const updatedStudentClassroom = await isStudentClassroomExisted.save()
+
+  res.status(200).json({
+    message: 'Updated Student-Classroom successfully',
+    updatedStudentClassroom,
+  })
+}
+export const deleteStudentsClassroom = async (req, res, next) => {
+  const { employeeType } = req.authenticatedUser
+  const authorizedEmployeeTypes = ['teacher']
+  if (!authorizedEmployeeTypes.includes(employeeType))
+    return next(
+      new Error(
+        `You can't access this resource with your position: ${employeeType}`,
+        {
+          cause: 403,
+        }
+      )
+    )
+
+  const { studentClassroomId } = req.params
+
+  const isStudentClassroomExisted = await StudentsClassRooms.findByPk(
+    studentClassroomId
+  )
+  if (!isStudentClassroomExisted)
+    return next(new Error('No Student-Classroom with this id'), { cause: 404 })
+
+  const deletedStudentClassroom = await isStudentClassroomExisted.destroy()
+  if (!deletedStudentClassroom) {
+    return next(new Error('Error While deleting student-classroom'))
+  }
+  res.status(200).json({
+    message: 'Student-Classroom has been deleted successfully',
+  })
+}
+export const restoreStudentsClassroom = async (req, res, next) => {
+  const { employeeType } = req.authenticatedUser
+  const authorizedEmployeeTypes = ['teacher']
+  if (!authorizedEmployeeTypes.includes(employeeType))
+    return next(
+      new Error(
+        `You can't access this resource with your position: ${employeeType}`,
+        {
+          cause: 403,
+        }
+      )
+    )
+  const { studentClassroomId } = req.params
+  const isStudentsClassroomExisted = await StudentsClassRooms.findByPk(
+    studentClassroomId,
+    {
+      paranoid: false,
+    }
+  )
+  if (!isStudentsClassroomExisted)
+    return next(new Error('No StudentsClassroom with this id', { cause: 404 }))
+
+  const restoredStudentsClassroom = await isStudentsClassroomExisted.restore()
+
+  if (!restoredStudentsClassroom)
+    return next(new Error('Error while restoring StudentsClassroom'))
+
+  res.status(200).json({
+    message: 'Students-Classroom has been restored successfully',
+    restoredStudentsClassroom,
   })
 }

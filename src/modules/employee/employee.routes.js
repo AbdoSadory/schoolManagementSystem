@@ -227,4 +227,43 @@ employeeRouter
     expressAsyncHandler(employeeControllers.deleteStudentsCourses)
   )
 
+//====================== student Classroom
+
+employeeRouter
+  .route('/studentClassrooms')
+  .get(
+    dataValidationHandler(
+      employeeValidationSchemas.getStudentsClassroomsSchema
+    ),
+    expressAsyncHandler(employeeControllers.getAllStudentsClassrooms)
+  )
+  .post(
+    dataValidationHandler(
+      employeeValidationSchemas.createStudentsClassroomsSchema
+    ),
+    expressAsyncHandler(employeeControllers.createStudentsClassroom)
+  )
+
+employeeRouter.put(
+  '/restoresStudentClassroom/:studentClassroomId',
+  dataValidationHandler(
+    employeeValidationSchemas.restoreStudentsClassroomsSchema
+  ),
+  expressAsyncHandler(employeeControllers.restoreStudentsClassroom)
+)
+
+employeeRouter
+  .route('/studentClassrooms/:studentClassroomId')
+  .put(
+    dataValidationHandler(
+      employeeValidationSchemas.updateStudentsClassroomsSchema
+    ),
+    expressAsyncHandler(employeeControllers.updateStudentsClassroom)
+  )
+  .delete(
+    dataValidationHandler(
+      employeeValidationSchemas.deleteStudentsClassroomsSchema
+    ),
+    expressAsyncHandler(employeeControllers.deleteStudentsClassroom)
+  )
 export default employeeRouter
