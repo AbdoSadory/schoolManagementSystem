@@ -117,4 +117,42 @@ employeeRouter.get(
   '/students',
   expressAsyncHandler(employeeControllers.getAllStudents)
 )
+
+//====================== Teacher Courses
+employeeRouter
+  .route('/teacherCourses')
+  .get(
+    dataValidationHandler(employeeValidationSchemas.getTeachersCoursesSchema),
+    expressAsyncHandler(employeeControllers.getAllTeachersCourses)
+  )
+  .post(
+    dataValidationHandler(
+      employeeValidationSchemas.adminTeachersCoursesCreateSchema
+    ),
+    expressAsyncHandler(employeeControllers.createTeachersCourses)
+  )
+
+employeeRouter.put(
+  '/restoreTeacherCourse/:teacherCourseId',
+  dataValidationHandler(employeeValidationSchemas.restoreTeachersCoursesSchema),
+  expressAsyncHandler(employeeControllers.restoreTeachersCourses)
+)
+
+employeeRouter
+  .route('/teacherCourses/:teacherCourseId')
+  .put(
+    dataValidationHandler(
+      employeeValidationSchemas.updateTeachersCoursesSchema
+    ),
+    expressAsyncHandler(employeeControllers.updateTeachersCourses)
+  )
+  .delete(
+    dataValidationHandler(
+      employeeValidationSchemas.deleteTeachersCoursesSchema
+    ),
+    expressAsyncHandler(employeeControllers.deleteTeachersCourses)
+  )
+
+//====================== Teacher Classroom
+
 export default employeeRouter
