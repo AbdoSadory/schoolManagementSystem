@@ -154,5 +154,41 @@ employeeRouter
   )
 
 //====================== Teacher Classroom
+employeeRouter
+  .route('/teacherClassrooms')
+  .get(
+    dataValidationHandler(
+      employeeValidationSchemas.getTeachersClassroomsSchema
+    ),
+    expressAsyncHandler(employeeControllers.getAllTeachersClassrooms)
+  )
+  .post(
+    dataValidationHandler(
+      employeeValidationSchemas.createTeachersClassroomsSchema
+    ),
+    expressAsyncHandler(employeeControllers.createTeachersClassroom)
+  )
 
+employeeRouter.put(
+  '/restoreTeacherClassroom/:teacherClassroomId',
+  dataValidationHandler(
+    employeeValidationSchemas.restoreTeachersClassroomsSchema
+  ),
+  expressAsyncHandler(employeeControllers.restoreTeachersClassrooms)
+)
+
+employeeRouter
+  .route('/teacherClassrooms/:teacherClassroomId')
+  .put(
+    dataValidationHandler(
+      employeeValidationSchemas.updateTeachersClassroomsSchema
+    ),
+    expressAsyncHandler(employeeControllers.updateTeachersClassroom)
+  )
+  .delete(
+    dataValidationHandler(
+      employeeValidationSchemas.deleteTeachersClassroomsSchema
+    ),
+    expressAsyncHandler(employeeControllers.deleteTeachersClassrooms)
+  )
 export default employeeRouter

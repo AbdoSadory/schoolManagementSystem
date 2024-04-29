@@ -301,3 +301,43 @@ export const restoreTeachersCoursesSchema = {
     teacherCourseId: Joi.number().min(1),
   }),
 }
+
+export const getTeachersClassroomsSchema = {
+  query: Joi.object({
+    teacherId: Joi.string().guid({ version: ['uuidv4'], separator: '-' }),
+    classroomId: Joi.number().min(1),
+  }),
+}
+export const createTeachersClassroomsSchema = {
+  body: Joi.object({
+    teacherId: Joi.string()
+      .guid({ version: ['uuidv4'], separator: '-' })
+      .required()
+      .messages({ '*': 'teacher id must be uuid4' }),
+    classroomId: Joi.number().min(1).required(),
+  }),
+}
+
+export const updateTeachersClassroomsSchema = {
+  params: Joi.object({
+    teacherClassroomId: Joi.number().min(1),
+  }),
+  body: Joi.object({
+    teacherId: Joi.string()
+      .guid({ version: ['uuidv4'], separator: '-' })
+      .messages({ '*': 'teacher id must be uuid4' }),
+    classroomId: Joi.number().min(1),
+  }),
+}
+
+export const deleteTeachersClassroomsSchema = {
+  params: Joi.object({
+    teacherClassroomId: Joi.number().min(1),
+  }),
+}
+
+export const restoreTeachersClassroomsSchema = {
+  params: Joi.object({
+    teacherClassroomId: Joi.number().min(1),
+  }),
+}
