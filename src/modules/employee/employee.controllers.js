@@ -1430,6 +1430,30 @@ export const restoreTeachersCourses = async (req, res, next) => {
 }
 
 export const getAllTeachersClassrooms = async (req, res, next) => {
+  const { id, employeeType, employeePosition } = req.authenticatedUser
+  const authorizedEmployeeTypes = ['owner', 'ceo', 'director', 'teacher']
+  const authorizedTeacherTypes = ['junior', 'mid-level']
+  if (!authorizedEmployeeTypes.includes(employeeType))
+    return next(
+      new Error(
+        `You can't access this resource with your position: ${employeeType}`,
+        {
+          cause: 403,
+        }
+      )
+    )
+  if (employeeType === 'teacher') {
+    if (authorizedTeacherTypes.includes(employeePosition)) {
+      const teachersCourses = await TeachersCourses.findAll({
+        where: { tblEmployeeId: id },
+      })
+      return res.status(200).json({
+        message: 'Your Courses',
+        teachersCourses,
+      })
+    }
+  }
+
   const { teacherId, classroomId } = req.query
   let query = {}
   teacherId && (query.tblEmployeeId = teacherId)
@@ -1706,6 +1730,18 @@ export const restoreTeachersClassrooms = async (req, res, next) => {
 }
 
 export const getAllStudentCourses = async (req, res, next) => {
+  const { employeeType } = req.authenticatedUser
+  const authorizedEmployeeTypes = ['owner', 'ceo', 'director', 'teacher']
+  if (!authorizedEmployeeTypes.includes(employeeType))
+    return next(
+      new Error(
+        `You can't access this resource with your position: ${employeeType}`,
+        {
+          cause: 403,
+        }
+      )
+    )
+
   const { studentId, courseId } = req.query
 
   let query = {}
@@ -1722,6 +1758,18 @@ export const getAllStudentCourses = async (req, res, next) => {
 }
 
 export const createStudentsCourses = async (req, res, next) => {
+  const { employeeType } = req.authenticatedUser
+  const authorizedEmployeeTypes = ['teacher']
+  if (!authorizedEmployeeTypes.includes(employeeType))
+    return next(
+      new Error(
+        `You can't access this resource with your position: ${employeeType}`,
+        {
+          cause: 403,
+        }
+      )
+    )
+
   const { courseId, studentId } = req.body
 
   const isCourseExisted = await Course.findByPk(courseId)
@@ -1762,6 +1810,18 @@ export const createStudentsCourses = async (req, res, next) => {
 }
 
 export const updateStudentsCourses = async (req, res, next) => {
+  const { employeeType } = req.authenticatedUser
+  const authorizedEmployeeTypes = ['teacher']
+  if (!authorizedEmployeeTypes.includes(employeeType))
+    return next(
+      new Error(
+        `You can't access this resource with your position: ${employeeType}`,
+        {
+          cause: 403,
+        }
+      )
+    )
+
   const { studentCourseId } = req.params
   const { studentId, courseId } = req.body
 
@@ -1829,6 +1889,18 @@ export const updateStudentsCourses = async (req, res, next) => {
 }
 
 export const deleteStudentsCourses = async (req, res, next) => {
+  const { employeeType } = req.authenticatedUser
+  const authorizedEmployeeTypes = ['teacher']
+  if (!authorizedEmployeeTypes.includes(employeeType))
+    return next(
+      new Error(
+        `You can't access this resource with your position: ${employeeType}`,
+        {
+          cause: 403,
+        }
+      )
+    )
+
   const { studentCourseId } = req.params
 
   const isStudentCourseExisted = await StudentsCourses.findByPk(studentCourseId)
@@ -1845,6 +1917,18 @@ export const deleteStudentsCourses = async (req, res, next) => {
 }
 
 export const restoreStudentsCourses = async (req, res, next) => {
+  const { employeeType } = req.authenticatedUser
+  const authorizedEmployeeTypes = ['teacher']
+  if (!authorizedEmployeeTypes.includes(employeeType))
+    return next(
+      new Error(
+        `You can't access this resource with your position: ${employeeType}`,
+        {
+          cause: 403,
+        }
+      )
+    )
+
   const { studentCourseId } = req.params
 
   const isStudentCourseExisted = await StudentsCourses.findByPk(
