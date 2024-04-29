@@ -341,3 +341,43 @@ export const restoreTeachersClassroomsSchema = {
     teacherClassroomId: Joi.number().min(1),
   }),
 }
+
+export const getStudentsCoursesSchema = {
+  query: Joi.object({
+    studentId: Joi.string().guid({ version: ['uuidv4'], separator: '-' }),
+    courseId: Joi.number().min(1),
+  }),
+}
+export const createStudentsCoursesSchema = {
+  body: Joi.object({
+    studentId: Joi.string()
+      .guid({ version: ['uuidv4'], separator: '-' })
+      .required()
+      .messages({ '*': 'student id must be uuid4' }),
+    courseId: Joi.number().min(1).required(),
+  }),
+}
+
+export const updateStudentsCoursesSchema = {
+  params: Joi.object({
+    studentCourseId: Joi.number().min(1),
+  }),
+  body: Joi.object({
+    studentId: Joi.string()
+      .guid({ version: ['uuidv4'], separator: '-' })
+      .messages({ '*': 'student id must be uuid4' }),
+    courseId: Joi.number().min(1),
+  }),
+}
+
+export const deleteStudentsCoursesSchema = {
+  params: Joi.object({
+    studentCourseId: Joi.number().min(1),
+  }),
+}
+
+export const restoreStudentsCoursesSchema = {
+  params: Joi.object({
+    studentCourseId: Joi.number().min(1),
+  }),
+}
