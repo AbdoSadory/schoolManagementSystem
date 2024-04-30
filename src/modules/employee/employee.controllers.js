@@ -34,13 +34,8 @@ export const updateProfile = async (req, res, next) => {
     phoneNumber,
     age,
     gender,
-    maritalStatus,
     graduationYear,
     educationDegree,
-    employeePosition,
-    specialization,
-    employeeType,
-    salary,
   } = req.body
 
   const { id } = req.authenticatedUser
@@ -130,13 +125,8 @@ export const updateProfile = async (req, res, next) => {
   nationality && (isEmployeeExisted.nationality = nationality)
   age && (isEmployeeExisted.age = age)
   gender && (isEmployeeExisted.gender = gender)
-  maritalStatus && (isEmployeeExisted.maritalStatus = maritalStatus)
   graduationYear && (isEmployeeExisted.graduationYear = graduationYear)
   educationDegree && (isEmployeeExisted.educationDegree = educationDegree)
-  employeePosition && (isEmployeeExisted.employeePosition = employeePosition)
-  specialization && (isEmployeeExisted.specialization = specialization)
-  employeeType && (isEmployeeExisted.employeeType = employeeType)
-  salary && (isEmployeeExisted.salary = salary)
 
   const updatedEmployee = await isEmployeeExisted.save()
   if (!updatedEmployee) {

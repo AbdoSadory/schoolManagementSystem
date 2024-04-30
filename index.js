@@ -7,6 +7,7 @@ import employeeRouter from './src/modules/employee/employee.routes.js'
 import globalErrorHandler from './src/middlewares/globalErrorHandler.js'
 import cloudinaryConnection from './src/utils/mediaHostConnection.js'
 import allAssociations from './DB/models/associations/associations.js'
+import studentRouter from './src/modules/student/student.routes.js'
 import { createAdmin } from './src/utils/createAdmin.js'
 
 config()
@@ -23,6 +24,7 @@ app.use(express.json())
 app.use('/auth', authRouter)
 app.use('/admin', adminRouter)
 app.use('/employee', employeeRouter)
+app.use('/student', studentRouter)
 
 app.use('*', (req, res, next) => {
   return next(new Error('Invalid URL', { cause: 404 }))
