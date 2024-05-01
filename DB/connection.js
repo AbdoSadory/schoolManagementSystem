@@ -17,8 +17,7 @@ export const sql_config = new Sequelize(
     port: parseInt(process.env.DB_port),
   }
 )
-// dpg-cop3vi0l5elc739cb8vg-a
-// postgres://schoolmanagementsystemdb_user:1YhQYutIkrNCAdZFijGuIfMaL1o8tyG2@dpg-cop3vi0l5elc739cb8vg-a.oregon-postgres.render.com/schoolmanagementsystemdb
+
 export const connectDB = async () => {
   await sql_config
     .sync({ alter: true })

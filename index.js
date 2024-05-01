@@ -8,6 +8,7 @@ import globalErrorHandler from './src/middlewares/globalErrorHandler.js'
 import cloudinaryConnection from './src/utils/mediaHostConnection.js'
 import allAssociations from './DB/models/associations/associations.js'
 import studentRouter from './src/modules/student/student.routes.js'
+import cors from 'cors'
 import { createAdmin } from './src/utils/createAdmin.js'
 
 config()
@@ -19,6 +20,11 @@ connectDB().then((res) => allAssociations())
 // .catch((err) => console.log(err.message))
 cloudinaryConnection()
 
+app.use(
+  cors({
+    origin: '*',
+  })
+)
 app.use(express.json())
 
 app.use('/auth', authRouter)
