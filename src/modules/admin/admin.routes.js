@@ -6,7 +6,7 @@ import dataValidationHandler from '../../middlewares/dataValidationHandler.js'
 import { authenticationHandler } from '../../middlewares/authenticationHandler.js'
 import Admin from '../../../DB/models/admin.model.js'
 import authorizationHandler from '../../middlewares/authorizationHandler.js'
-import * as adminNestedRoutes from './admin-nested-routes.js'
+import * as adminNestedRoutes from './admin.nested.routes.js'
 
 const adminRouter = Router()
 

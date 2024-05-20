@@ -2,12 +2,9 @@ import { Op } from 'sequelize'
 import cloudinaryConnection from '../../utils/mediaHostConnection.js'
 import ClassRoom from '../../../DB/models/classRoom.model.js'
 import Employee from '../../../DB/models/employee.mode.js'
-import Finance from '../../../DB/models/finance.model.js'
 import Student from '../../../DB/models/student.model.js'
 import Course from '../../../DB/models/course.model.js'
 import CourseResults from '../../../DB/models/courseResults.model.js'
-import TeachersCourses from '../../../DB/models/junctionTables/teacherCourse.model.js'
-import TeachersClassRooms from '../../../DB/models/junctionTables/teachersClassRooms.model.js'
 import StudentsCourses from '../../../DB/models/junctionTables/studentCourse.model.js'
 import StudentsClassRooms from '../../../DB/models/junctionTables/studentClassRooms.model.js'
 
@@ -163,7 +160,6 @@ export const getAllCourseResults = async (req, res, next) => {
 
   res.status(200).json({ message: 'Course Results', courseResults })
 }
-
 export const getAllStudentCourses = async (req, res, next) => {
   const { id, role } = req.authenticatedUser
   if (!role === 'student')
@@ -192,7 +188,6 @@ export const getAllStudentCourses = async (req, res, next) => {
     studentsCourses,
   })
 }
-
 export const getAllStudentsClassrooms = async (req, res, next) => {
   const { id, role } = req.authenticatedUser
   if (!role === 'student')

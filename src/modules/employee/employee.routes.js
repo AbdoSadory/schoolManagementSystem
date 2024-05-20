@@ -54,7 +54,7 @@ employeeRouter
   )
   .delete(
     dataValidationHandler(employeeValidationSchemas.deleteClassroomSchema),
-    expressAsyncHandler(employeeControllers.d)
+    expressAsyncHandler(employeeControllers.deleteClassroom)
   )
 
 //====================== course
@@ -120,7 +120,7 @@ employeeRouter.get(
 
 //====================== Teacher Courses
 employeeRouter
-  .route('/teacherCourses')
+  .route('/teacherCourse')
   .get(
     dataValidationHandler(employeeValidationSchemas.getTeachersCoursesSchema),
     expressAsyncHandler(employeeControllers.getAllTeachersCourses)
@@ -139,7 +139,7 @@ employeeRouter.put(
 )
 
 employeeRouter
-  .route('/teacherCourses/:teacherCourseId')
+  .route('/teacherCourse/:teacherCourseId')
   .put(
     dataValidationHandler(
       employeeValidationSchemas.updateTeachersCoursesSchema
@@ -155,7 +155,7 @@ employeeRouter
 
 //====================== Teacher Classroom
 employeeRouter
-  .route('/teacherClassrooms')
+  .route('/teacherClassroom')
   .get(
     dataValidationHandler(
       employeeValidationSchemas.getTeachersClassroomsSchema
@@ -178,7 +178,7 @@ employeeRouter.put(
 )
 
 employeeRouter
-  .route('/teacherClassrooms/:teacherClassroomId')
+  .route('/teacherClassroom/:teacherClassroomId')
   .put(
     dataValidationHandler(
       employeeValidationSchemas.updateTeachersClassroomsSchema
@@ -194,7 +194,7 @@ employeeRouter
 
 //====================== student Course
 employeeRouter
-  .route('/studentCourses')
+  .route('/studentCourse')
   .get(
     dataValidationHandler(employeeValidationSchemas.getStudentsCoursesSchema),
     expressAsyncHandler(employeeControllers.getAllStudentCourses)
@@ -213,7 +213,7 @@ employeeRouter.put(
 )
 
 employeeRouter
-  .route('/studentCourses/:studentCourseId')
+  .route('/studentCourse/:studentCourseId')
   .put(
     dataValidationHandler(
       employeeValidationSchemas.updateStudentsCoursesSchema
@@ -230,7 +230,7 @@ employeeRouter
 //====================== student Classroom
 
 employeeRouter
-  .route('/studentClassrooms')
+  .route('/studentClassroom')
   .get(
     dataValidationHandler(
       employeeValidationSchemas.getStudentsClassroomsSchema
@@ -253,7 +253,7 @@ employeeRouter.put(
 )
 
 employeeRouter
-  .route('/studentClassrooms/:studentClassroomId')
+  .route('/studentClassroom/:studentClassroomId')
   .put(
     dataValidationHandler(
       employeeValidationSchemas.updateStudentsClassroomsSchema

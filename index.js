@@ -14,7 +14,7 @@ import { createAdmin } from './src/utils/createAdmin.js'
 config()
 const app = express()
 
-connectDB().then((res) => allAssociations())
+// connectDB().then((res) => allAssociations())
 // .then((res) => createAdmin())
 // .then((res) => console.log('🟢 Admin has been created'))
 // .catch((err) => console.log(err.message))
@@ -32,6 +32,9 @@ app.use('/admin', adminRouter)
 app.use('/employee', employeeRouter)
 app.use('/student', studentRouter)
 
+app.get('/', (req, res, next) => {
+  return res.status(200).json({ message: 'welcome to our school' })
+})
 app.use('*', (req, res, next) => {
   return next(new Error('Invalid URL', { cause: 404 }))
 })
