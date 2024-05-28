@@ -17,6 +17,15 @@ export const sql_config = new Sequelize(
     port: parseInt(process.env.DB_port),
   }
 )
+// export const sql_config = new Sequelize(
+//   'schoolmanagementsystemdb',
+//   'root',
+//   '123456',
+//   {
+//     host: 'localhost',
+//     dialect: 'mysql',
+//   }
+// )
 
 export const connectDB = async () => {
   await sql_config

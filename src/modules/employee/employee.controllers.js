@@ -138,7 +138,18 @@ export const updateProfile = async (req, res, next) => {
 }
 export const employeeProfile = async (req, res, next) => {
   const { employeeId } = req.params
-  const user = await Employee.findByPk(employeeId)
+  const user = await Employee.findByPk(employeeId, {
+    attributes: {
+      exclude: [
+        'password',
+        'nationalID',
+        'salary',
+        'profileImagePublic_Id',
+        'createdAt',
+        'updatedAt',
+      ],
+    },
+  })
   res.status(200).json({ message: 'User Profile', user })
 }
 export const allFinance = async (req, res, next) => {
