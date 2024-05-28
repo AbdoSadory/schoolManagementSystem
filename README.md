@@ -139,79 +139,9 @@ Following ExpressJS Structure:
 
 ## Endpoints
 
+### Live URL : https://schoolmanagementsystem-150u.onrender.com/
+
 ### Check APIs Documentation : https://documenter.getpostman.com/view/27228437/2sA3JM8hGz
-
-### Auth
-
-| Method | URL            | Description                  |
-| ------ | -------------- | ---------------------------- |
-| POST   | `/auth/signIn` | Login as student or Employee |
-
-### Employee
-
-| Method | URL                                                     | Description                    |
-| ------ | ------------------------------------------------------- | ------------------------------ |
-| GET    | `/employee/myProfile`                                   | Get private profile            |
-| GET    | `/employee/profile/:employeeId`                         | Get public profile             |
-| PUT    | `/employee/myProfile`                                   | Update profile                 |
-| GET    | `/employee/classroom`                                   | Get all classrooms             |
-| POST   | `/employee/classroom`                                   | Create classroom               |
-| GET    | `/employee/classroom/:classroomId`                      | Get classroom by id            |
-| PUT    | `/employee/classroom/:classroomId`                      | Update classroom by id         |
-| DELETE | `/employee/classroom/:classroomId`                      | Delete classroom by id         |
-| -----  | -----------------------------------                     | ------                         |
-| GET    | `/employee/course`                                      | Get all courses                |
-| POST   | `/employee/course`                                      | Create course                  |
-| GET    | `/employee/course/:courseId`                            | Get course by id               |
-| PUT    | `/employee/course/:courseId`                            | Update course by id            |
-| DELETE | `/employee/course/:courseId`                            | Delete course by id            |
-| -----  | -----------------------------------                     | ------                         |
-| GET    | `/employee/courseResults`                               | Get all courseResults          |
-| POST   | `/employee/courseResults`                               | Create courseResults           |
-| GET    | `/employee/courseResults/:courseResultsId`              | Get courseResults by id        |
-| PUT    | `/employee/courseResults/:courseResultsId`              | Update courseResults by id     |
-| DELETE | `/employee/courseResults/:courseResultsId`              | Delete courseResults by id     |
-| PUT    | `/employee/restoreCourseResult/:courseResultId`         | Restore courseResults by id    |
-| -----  | -----------------------------------                     | ------                         |
-| GET    | `/employee/students`                                    | Get all students               |
-| -----  | -----------------------------------                     | ------                         |
-| GET    | `/employee/teacherCourse`                               | Get all teacherCourses         |
-| POST   | `/employee/teacherCourse`                               | Create teacherCourse           |
-| GET    | `/employee/teacherCourse/:teacherCourseId`              | Get teacherCourse by id        |
-| PUT    | `/employee/teacherCourse/:teacherCourseId`              | Update teacherCourse by id     |
-| DELETE | `/employee/teacherCourse/:teacherCourseId`              | Delete teacherCourse by id     |
-| PUT    | `/employee/restoreTeacherCourse/:teacherCourseId`       | Restore teacherCourse by id    |
-| -----  | -----------------------------------                     | ------                         |
-| GET    | `/employee/teacherClassroom`                            | Get all teacherClassrooms      |
-| POST   | `/employee/teacherClassroom`                            | Create teacherClassroom        |
-| GET    | `/employee/teacherClassroom/:teacherClassroomId`        | Get teacherClassroom by id     |
-| PUT    | `/employee/teacherClassroom/:teacherClassroomId`        | Update teacherClassroom by id  |
-| DELETE | `/employee/teacherClassroom/:teacherClassroomId`        | Delete teacherClassroom by id  |
-| PUT    | `/employee/restoreTeacherClassroom/:teacherClassroomId` | Restore teacherClassroom by id |
-| -----  | -----------------------------------                     | ------                         |
-| GET    | `/employee/studentCourse`                               | Get all studentCourses         |
-| POST   | `/employee/studentCourse`                               | Create studentCourse           |
-| GET    | `/employee/studentCourse/:studentCourseId`              | Get studentCourse by id        |
-| PUT    | `/employee/studentCourse/:studentCourseId`              | Update studentCourse by id     |
-| DELETE | `/employee/studentCourse/:studentCourseId`              | Delete studentCourse by id     |
-| PUT    | `/employee/restoreStudentCourse/:studentCourseId`       | Restore studentCourse by id    |
-| -----  | -----------------------------------                     | ------                         |
-| GET    | `/employee/studentClassroom`                            | Get all studentClassrooms      |
-| POST   | `/employee/studentClassroom`                            | Create studentClassroom        |
-| GET    | `/employee/studentClassroom/:studentClassroomId`        | Get studentClassroom by id     |
-| PUT    | `/employee/studentClassroom/:studentClassroomId`        | Update studentClassroom by id  |
-| DELETE | `/employee/studentClassroom/:studentClassroomId`        | Delete studentClassroom by id  |
-| PUT    | `/employee/restoreStudentClassroom/:studentClassroomId` | Restore studentClassroom by id |
-
-### Student
-
-| Method | URL                     | Description            |
-| ------ | ----------------------- | ---------------------- |
-| GET    | `/student/myProfile`    | Get private profile    |
-| PUT    | `/student/myProfile`    | Update private profile |
-| GET    | `/student/myClassrooms` | Get my classrooms      |
-| GET    | `/student/myCourses`    | Get my courses         |
-| GET    | `/student/myResults`    | Get my courses results |
 
 ### Admin Dashboard
 
@@ -287,3 +217,75 @@ Following ExpressJS Structure:
 | PUT    | `/studentClassrooms/:studentClassroomId`                         | Update studentClassroom    |
 | PUT    | `/studentClassrooms/restoreStudentClassroom/:studentClassroomId` | Restore studentClassroom   |
 | DELETE | `/studentClassrooms/:studentClassroomId`                         | Delete studentClassroom    |
+
+### Auth
+
+| Method | URL            | Description                  |
+| ------ | -------------- | ---------------------------- |
+| POST   | `/auth/signIn` | Login as student or Employee |
+
+### Employee
+
+| Method | URL                                                     | Description                    |
+| ------ | ------------------------------------------------------- | ------------------------------ |
+| GET    | `/employee/myProfile`                                   | Get private profile            |
+| GET    | `/employee/profile/:employeeId`                         | Get public profile             |
+| PUT    | `/employee/myProfile`                                   | Update profile                 |
+| GET    | `/employee/classroom`                                   | Get all classrooms             |
+| POST   | `/employee/classroom`                                   | Create classroom               |
+| GET    | `/employee/classroom/:classroomId`                      | Get classroom by id            |
+| PUT    | `/employee/classroom/:classroomId`                      | Update classroom by id         |
+| DELETE | `/employee/classroom/:classroomId`                      | Delete classroom by id         |
+| -----  | -----------------------------------                     | ------                         |
+| GET    | `/employee/course`                                      | Get all courses                |
+| POST   | `/employee/course`                                      | Create course                  |
+| GET    | `/employee/course/:courseId`                            | Get course by id               |
+| PUT    | `/employee/course/:courseId`                            | Update course by id            |
+| DELETE | `/employee/course/:courseId`                            | Delete course by id            |
+| -----  | -----------------------------------                     | ------                         |
+| GET    | `/employee/courseResults`                               | Get all courseResults          |
+| POST   | `/employee/courseResults`                               | Create courseResults           |
+| GET    | `/employee/courseResults/:courseResultsId`              | Get courseResults by id        |
+| PUT    | `/employee/courseResults/:courseResultsId`              | Update courseResults by id     |
+| DELETE | `/employee/courseResults/:courseResultsId`              | Delete courseResults by id     |
+| PUT    | `/employee/restoreCourseResult/:courseResultId`         | Restore courseResults by id    |
+| -----  | -----------------------------------                     | ------                         |
+| GET    | `/employee/students`                                    | Get all students               |
+| -----  | -----------------------------------                     | ------                         |
+| GET    | `/employee/teacherCourse`                               | Get all teacherCourses         |
+| POST   | `/employee/teacherCourse`                               | Create teacherCourse           |
+| GET    | `/employee/teacherCourse/:teacherCourseId`              | Get teacherCourse by id        |
+| PUT    | `/employee/teacherCourse/:teacherCourseId`              | Update teacherCourse by id     |
+| DELETE | `/employee/teacherCourse/:teacherCourseId`              | Delete teacherCourse by id     |
+| PUT    | `/employee/restoreTeacherCourse/:teacherCourseId`       | Restore teacherCourse by id    |
+| -----  | -----------------------------------                     | ------                         |
+| GET    | `/employee/teacherClassroom`                            | Get all teacherClassrooms      |
+| POST   | `/employee/teacherClassroom`                            | Create teacherClassroom        |
+| GET    | `/employee/teacherClassroom/:teacherClassroomId`        | Get teacherClassroom by id     |
+| PUT    | `/employee/teacherClassroom/:teacherClassroomId`        | Update teacherClassroom by id  |
+| DELETE | `/employee/teacherClassroom/:teacherClassroomId`        | Delete teacherClassroom by id  |
+| PUT    | `/employee/restoreTeacherClassroom/:teacherClassroomId` | Restore teacherClassroom by id |
+| -----  | -----------------------------------                     | ------                         |
+| GET    | `/employee/studentCourse`                               | Get all studentCourses         |
+| POST   | `/employee/studentCourse`                               | Create studentCourse           |
+| GET    | `/employee/studentCourse/:studentCourseId`              | Get studentCourse by id        |
+| PUT    | `/employee/studentCourse/:studentCourseId`              | Update studentCourse by id     |
+| DELETE | `/employee/studentCourse/:studentCourseId`              | Delete studentCourse by id     |
+| PUT    | `/employee/restoreStudentCourse/:studentCourseId`       | Restore studentCourse by id    |
+| -----  | -----------------------------------                     | ------                         |
+| GET    | `/employee/studentClassroom`                            | Get all studentClassrooms      |
+| POST   | `/employee/studentClassroom`                            | Create studentClassroom        |
+| GET    | `/employee/studentClassroom/:studentClassroomId`        | Get studentClassroom by id     |
+| PUT    | `/employee/studentClassroom/:studentClassroomId`        | Update studentClassroom by id  |
+| DELETE | `/employee/studentClassroom/:studentClassroomId`        | Delete studentClassroom by id  |
+| PUT    | `/employee/restoreStudentClassroom/:studentClassroomId` | Restore studentClassroom by id |
+
+### Student
+
+| Method | URL                     | Description            |
+| ------ | ----------------------- | ---------------------- |
+| GET    | `/student/myProfile`    | Get private profile    |
+| PUT    | `/student/myProfile`    | Update private profile |
+| GET    | `/student/myClassrooms` | Get my classrooms      |
+| GET    | `/student/myCourses`    | Get my courses         |
+| GET    | `/student/myResults`    | Get my courses results |

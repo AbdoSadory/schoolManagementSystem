@@ -9,15 +9,11 @@ import cloudinaryConnection from './src/utils/mediaHostConnection.js'
 import allAssociations from './DB/models/associations/associations.js'
 import studentRouter from './src/modules/student/student.routes.js'
 import cors from 'cors'
-import { createAdmin } from './src/utils/createAdmin.js'
 
 config()
 const app = express()
 
 connectDB().then((res) => allAssociations())
-// .then((res) => createAdmin())
-// .then((res) => console.log('🟢 Admin has been created'))
-// .catch((err) => console.log(err.message))
 cloudinaryConnection()
 
 app.use(
